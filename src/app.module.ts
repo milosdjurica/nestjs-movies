@@ -5,9 +5,11 @@ import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './users/users.module';
 import { MoviesModule } from './movies/movies.module';
 import { SeriesModule } from './series/series.module';
+import { GenresModule } from './genres/genres.module';
+import { ActorModule } from './actor/actor.module';
 
 @Module({
-  imports: [DatabaseModule, UsersModule, MoviesModule, SeriesModule],
+  imports: [DatabaseModule, UsersModule, MoviesModule, SeriesModule, GenresModule, ActorModule],
   controllers: [AppController],
   providers: [AppService],
 })

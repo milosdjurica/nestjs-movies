@@ -6,19 +6,19 @@ import { Prisma } from '@prisma/client';
 export class SeriesService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  create(createSeriesDto: Prisma.SeriesCreateInput) {
+  async create(createSeriesDto: Prisma.SeriesCreateInput) {
     return this.databaseService.series.create({ data: createSeriesDto });
   }
 
-  findAll() {
+  async findAll() {
     return this.databaseService.series.findMany({});
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     return this.databaseService.series.findUnique({ where: { id } });
   }
 
-  update(id: number, updateSeriesDto: Prisma.SeriesUpdateInput) {
+  async update(id: number, updateSeriesDto: Prisma.SeriesUpdateInput) {
     return this.databaseService.series.update({
       where: { id },
       data: updateSeriesDto,
