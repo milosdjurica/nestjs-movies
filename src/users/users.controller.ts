@@ -20,8 +20,9 @@ export class UsersController {
   }
 
   @Get()
+  // TODO pass movies and series as query params or something, (default should be false?)
   findAll() {
-    return this.usersService.findAll();
+    return this.usersService.findAll({ movies: true, series: true });
   }
 
   @Get(':id')

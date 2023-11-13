@@ -13,11 +13,17 @@ export class UsersService {
     return user;
   }
 
-  async findAll() {
-    return this.databaseService.user.findMany({});
+  async findAll({ movies, series }: { movies: boolean; series: boolean }) {
+    return this.databaseService.user.findMany({
+      include: {
+        movies,
+        series,
+      },
+    });
   }
 
   async findOne(id: number) {
+    // TODO also pass include: {movies, series}
     return this.databaseService.user.findUnique({
       where: {
         id,
@@ -34,7 +40,7 @@ export class UsersService {
     });
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return this.databaseService.user.delete({
       where: {
         id,
