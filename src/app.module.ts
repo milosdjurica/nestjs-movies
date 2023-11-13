@@ -7,9 +7,10 @@ import { MoviesModule } from './movies/movies.module';
 import { SeriesModule } from './series/series.module';
 import { GenresModule } from './genres/genres.module';
 import { ActorModule } from './actor/actor.module';
+import { RatingsModule } from './ratings/ratings.module';
 
 @Module({
-  imports: [DatabaseModule, UsersModule, MoviesModule, SeriesModule, GenresModule, ActorModule],
+  imports: [DatabaseModule, UsersModule, MoviesModule, SeriesModule, GenresModule, ActorModule, RatingsModule],
   controllers: [AppController],
   providers: [AppService],
 })
