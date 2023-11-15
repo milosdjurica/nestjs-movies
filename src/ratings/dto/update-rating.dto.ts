@@ -1,4 +1,13 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateRatingDto } from './create-rating.dto';
+// update-rating.dto.ts
+import { IsNumber } from "class-validator";
 
-export class UpdateRatingDto extends PartialType(CreateRatingDto) {}
+export class UpdateRatingDto {
+  @IsNumber()
+  readonly score?: number;
+
+  @IsNumber()
+  readonly movieId?: number;
+
+  @IsNumber()
+  readonly seriesId?: number;
+}
