@@ -1,30 +1,58 @@
-import { DatabaseService } from '@Src/database/database.service';
-import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { DatabaseService } from "@Src/database/database.service";
+import { Injectable } from "@nestjs/common";
+import { CreateActorDto, UpdateActorDto } from "./dto";
 
 @Injectable()
 export class ActorService {
   constructor(private readonly databaseService: DatabaseService) {}
-  async create(createActorDto: Prisma.ActorCreateInput) {
-    return this.databaseService.actor.create({ data: createActorDto });
+
+  async create(createActorDto: CreateActorDto) {
+    try {
+      return this.databaseService.actor.create({ data: createActorDto });
+    } catch (error) {
+      console.error(`Error with creating an actor: `, error);
+      throw new Error("An error occurred while creating the actor.");
+    }
   }
 
   async findAll() {
-    return this.databaseService.actor.findMany({});
+    try {
+      return this.databaseService.actor.findMany({});
+    } catch (error) {
+      console.error(`Error trying to find actors:`, error);
+      throw new Error(
+        "An error occurred while trying to find all actors actor.",
+      );
+    }
   }
 
   async findOne(id: number) {
-    return this.databaseService.actor.findUnique({ where: { id } });
+    try {
+      return this.databaseService.actor.findUnique({ where: { id } });
+    } catch (error) {
+      console.error(`Error trying to find actor with ID ${id}:`, error);
+      throw new Error("An error occurred while trying to find the actor.");
+    }
   }
 
-  async update(id: number, updateActorDto: Prisma.ActorUpdateInput) {
-    return this.databaseService.actor.update({
-      where: { id },
-      data: updateActorDto,
-    });
+  async update(id: number, updateActorDto: UpdateActorDto) {
+    try {
+      return this.databaseService.actor.update({
+        where: { id },
+        data: updateActorDto,
+      });
+    } catch (error) {
+      console.error(`Error updating actor with ID ${id}:`, error);
+      throw new Error("An error occurred while updating the actor.");
+    }
   }
 
   async remove(id: number) {
-    return this.databaseService.actor.delete({ where: { id } });
+    try {
+      return this.databaseService.actor.delete({ where: { id } });
+    } catch (error) {
+      console.error(`Error deleting actor with ID ${id}:`, error);
+      throw new Error("An error occurred while deleting the actor.");
+    }
   }
 }

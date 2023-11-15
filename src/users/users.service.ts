@@ -1,10 +1,13 @@
-import { DatabaseService } from '@Src/database/database.service';
-import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { DatabaseService } from "@Src/database/database.service";
+import { Injectable } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class UsersService {
   constructor(private readonly databaseService: DatabaseService) {}
+
+  // TODO create auth module, where users can auth and all that,
+  // TODO this create will be reserved only for admin to add another admin
 
   async create(createUserDto: Prisma.UserCreateInput) {
     const user = await this.databaseService.user.create({
