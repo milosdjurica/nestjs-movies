@@ -7,6 +7,7 @@ import {
   IsNumber,
   IsArray,
   ValidateNested,
+  IsOptional,
 } from "class-validator";
 
 export class CreateMovieDto {
@@ -22,11 +23,13 @@ export class CreateMovieDto {
   @IsNumber()
   readonly length: number;
 
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateActorDto)
   actors?: CreateActorDto[];
 
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateGenreDto)
