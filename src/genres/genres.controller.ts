@@ -6,16 +6,16 @@ import {
   Patch,
   Param,
   Delete,
-} from '@nestjs/common';
-import { GenresService } from './genres.service';
-import { Prisma } from '@prisma/client';
+} from "@nestjs/common";
+import { GenresService } from "./genres.service";
+import { CreateGenreDto, UpdateGenreDto } from "./dto";
 
-@Controller('genres')
+@Controller("genres")
 export class GenresController {
   constructor(private readonly genresService: GenresService) {}
 
   @Post()
-  create(@Body() createGenreDto: Prisma.GenreCreateInput) {
+  create(@Body() createGenreDto: CreateGenreDto) {
     return this.genresService.create(createGenreDto);
   }
 
@@ -24,21 +24,18 @@ export class GenresController {
     return this.genresService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get(":id")
+  findOne(@Param("id") id: string) {
     return this.genresService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateGenreDto: Prisma.GenreUpdateInput,
-  ) {
+  @Patch(":id")
+  update(@Param("id") id: string, @Body() updateGenreDto: UpdateGenreDto) {
     return this.genresService.update(+id, updateGenreDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete(":id")
+  remove(@Param("id") id: string) {
     return this.genresService.remove(+id);
   }
 }

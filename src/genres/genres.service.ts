@@ -1,31 +1,56 @@
-import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { DatabaseService } from '@Src/database/database.service';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { DatabaseService } from "@Src/database/database.service";
+import { CreateGenreDto, UpdateGenreDto } from "./dto";
 
 @Injectable()
 export class GenresService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async create(createGenreDto: Prisma.GenreCreateInput) {
-    return this.databaseService.genre.create({ data: createGenreDto });
+  async create(createGenreDto: CreateGenreDto) {
+    try {
+      return await this.databaseService.genre.create({ data: createGenreDto });
+    } catch (error) {
+      console.error(`Error creating genre:`, error);
+      throw new Error("An error occurred while creating the genre.");
+    }
   }
 
   async findAll() {
-    return this.databaseService.genre.findMany({});
+    try {
+      return await this.databaseService.genre.findMany({});
+    } catch (error) {
+      console.error(`Error fetching genres:`, error);
+      throw new Error("An error occurred while fetching genres.");
+    }
   }
 
   async findOne(id: number) {
-    return this.databaseService.genre.findUnique({ where: { id } });
+    try {
+      return await this.databaseService.genre.findUnique({ where: { id } });
+    } catch (error) {
+      console.error(`Error fetching genre with ID ${id}:`, error);
+      throw new NotFoundException(`Genre with ID ${id} not found.`);
+    }
   }
 
-  async update(id: number, updateGenreDto: Prisma.GenreUpdateInput) {
-    return this.databaseService.genre.update({
-      where: { id },
-      data: updateGenreDto,
-    });
+  async update(id: number, updateGenreDto: UpdateGenreDto) {
+    try {
+      return await this.databaseService.genre.update({
+        where: { id },
+        data: updateGenreDto,
+      });
+    } catch (error) {
+      console.error(`Error updating genre with ID ${id}:`, error);
+      throw new Error("An error occurred while updating the genre.");
+    }
   }
 
   async remove(id: number) {
-    return this.databaseService.genre.delete({ where: { id } });
+    try {
+      return await this.databaseService.genre.delete({ where: { id } });
+    } catch (error) {
+      console.error(`Error deleting genre with ID ${id}:`, error);
+      throw new Error("An error occurred while deleting the genre.");
+    }
   }
 }
