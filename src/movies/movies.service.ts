@@ -7,12 +7,16 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { CreateMovieDto, UpdateMovieDto } from "./dto";
-import { CreateGenreDto } from "@Src/genres/dto";
-import { CreateActorDto } from "@Src/actors/dto";
+import { MovieActorService } from "@Src/movie-actor/movie-actor.service";
+import { MovieGenreService } from "@Src/movie-genre/movie-genre.service";
 
 @Injectable()
 export class MoviesService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly moviesActorsService: MovieActorService,
+    private readonly moviesGenreService: MovieGenreService,
+  ) {}
 
   async create(createMovieDto: CreateMovieDto) {
     try {
@@ -20,12 +24,14 @@ export class MoviesService {
       await this.movieExist(createMovieDto.title);
 
       // ! If no actors then pass empty array
-      const movieActorsCreateData = await this.createOrConnectActorsWithMovies(
-        createMovieDto.actors || [],
-      );
-      const movieGenresCreateData = await this.createOrConnectGenresWithMovies(
-        createMovieDto.genres || [],
-      );
+      const movieActorsCreateData =
+        await this.moviesActorsService.createOrConnectActorsWithMovies(
+          createMovieDto.actors || [],
+        );
+      const movieGenresCreateData =
+        await this.moviesGenreService.createOrConnectGenresWithMovies(
+          createMovieDto.genres || [],
+        );
 
       // ! Delete those properties so i can just spread object in create method
       // ! instead of manually adding every field
@@ -115,31 +121,6 @@ export class MoviesService {
 
   // TODO Maybe i should move this to ActorsService and GenresService
   // TODO ???????????????????????????????????????????????????????????
-  private async createOrConnectActorsWithMovies(actors: CreateActorDto[]) {
-    return Promise.all(
-      actors.map(async (actor) => {
-        const createdActor = await this.databaseService.actor.upsert({
-          where: { name: actor.name },
-          update: {},
-          create: actor,
-        });
-        return { actor: { connect: { id: createdActor.id } } };
-      }),
-    );
-  }
-
-  private async createOrConnectGenresWithMovies(genres: CreateGenreDto[]) {
-    return Promise.all(
-      genres.map(async (genre) => {
-        const createdGenre = await this.databaseService.genre.upsert({
-          where: { name: genre.name },
-          update: {},
-          create: genre,
-        });
-        return { genre: { connect: { id: createdGenre.id } } };
-      }),
-    );
-  }
 
   async movieExist(title: string) {
     const movie = await this.databaseService.movie.findUnique({

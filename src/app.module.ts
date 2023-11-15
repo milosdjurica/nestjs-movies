@@ -8,6 +8,8 @@ import { SeriesModule } from "./series/series.module";
 import { GenresModule } from "./genres/genres.module";
 import { RatingsModule } from "./ratings/ratings.module";
 import { ActorsModule } from "./actors/actors.module";
+import { MovieActorModule } from './movie-actor/movie-actor.module';
+import { MovieGenreModule } from './movie-genre/movie-genre.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { ActorsModule } from "./actors/actors.module";
     GenresModule,
     RatingsModule,
     ActorsModule,
+    MovieActorModule,
+    MovieGenreModule,
   ],
   controllers: [AppController],
   providers: [AppService],

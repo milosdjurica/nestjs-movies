@@ -1,4 +1,13 @@
-import { IsOptional, IsString, IsNumber } from "class-validator";
+import { UpdateActorDto } from "@Src/actors/dto";
+import { UpdateGenreDto } from "@Src/genres/dto";
+import { Type } from "class-transformer";
+import {
+  IsOptional,
+  IsString,
+  IsNumber,
+  IsArray,
+  ValidateNested,
+} from "class-validator";
 
 export class UpdateMovieDto {
   @IsOptional()
@@ -12,4 +21,16 @@ export class UpdateMovieDto {
   @IsOptional()
   @IsNumber()
   readonly length?: number;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateActorDto)
+  readonly actors?: UpdateActorDto[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateGenreDto)
+  readonly genres?: UpdateGenreDto[];
 }
