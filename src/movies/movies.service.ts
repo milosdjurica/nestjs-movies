@@ -1,5 +1,11 @@
 import { DatabaseService } from "@Src/database/database.service";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  ConflictException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { CreateMovieDto, UpdateMovieDto } from "./dto";
 import { CreateGenreDto } from "@Src/genres/dto";
 import { CreateActorDto } from "@Src/actors/dto";
@@ -11,6 +17,15 @@ export class MoviesService {
   async create(createMovieDto: CreateMovieDto) {
     try {
       // TODO Add check if movie already exist with that name or change to upsert ???
+
+      const foundMovie = await this.databaseService.movie.findUnique({
+        where: { title: createMovieDto.title },
+      });
+
+      if (foundMovie)
+        throw new ConflictException(
+          `Movie with title ${createMovieDto.title} already exist!`,
+        );
 
       // ! If no actors then pass empty array
       const actors = createMovieDto.actors || [];
@@ -38,8 +53,15 @@ export class MoviesService {
         },
       });
     } catch (error) {
-      console.error("Error creating movie:", error);
-      throw new Error("Failed to create movie.");
+      console.error(`Error creating movie: ${error.message}`);
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        `Error creating movie: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -47,8 +69,14 @@ export class MoviesService {
     try {
       return await this.databaseService.movie.findMany({});
     } catch (error) {
-      console.error("Error fetching movies:", error);
-      throw new Error("Failed to fetch movies.");
+      console.error(`Could not find any movies!`, error.message);
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        `Could not find any movies!`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -57,13 +85,19 @@ export class MoviesService {
       const movie = await this.databaseService.movie.findUnique({
         where: { id },
       });
-      if (!movie) {
-        throw new NotFoundException(`Movie with ID ${id} not found.`);
-      }
+
+      if (!movie)
+        throw new NotFoundException(`Could not find a movie with ID ${id}`);
       return movie;
     } catch (error) {
-      console.error(`Error fetching movie with ID ${id}:`, error);
-      throw new Error("Failed to fetch movie.");
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      console.error(`Could not find a movie with ID ${id}:`, error.message);
+      throw new HttpException(
+        `Could not find a movie with ID ${id}. Check if that item already exist.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -76,8 +110,14 @@ export class MoviesService {
         data: updateMovieDto,
       });
     } catch (error) {
-      console.error(`Error updating movie with ID ${id}:`, error);
-      throw new Error("Failed to update movie.");
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      console.error(`Error updating movie with ID ${id}:`, error.message);
+      throw new HttpException(
+        `Error updating movie with ID ${id}!`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -85,8 +125,14 @@ export class MoviesService {
     try {
       return await this.databaseService.movie.delete({ where: { id } });
     } catch (error) {
-      console.error(`Error deleting movie with ID ${id}:`, error);
-      throw new Error("Failed to delete movie.");
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      console.error(`Error deleting movie with ID ${id}:`, error.message);
+      throw new HttpException(
+        `Error creating movie with ID ${id}! Check if that item already exist.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
