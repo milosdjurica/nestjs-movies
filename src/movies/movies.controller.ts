@@ -8,14 +8,15 @@ import {
   Delete,
 } from "@nestjs/common";
 import { MoviesService } from "./movies.service";
-import { Prisma } from "@prisma/client";
+import { CreateMovieDto, UpdateMovieDto } from "./dto";
 
 @Controller("movies")
 export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
 
+  // TODO add createdBy ID from JWT token (ID of user who is creating this movie)
   @Post()
-  create(@Body() createMovieDto: Prisma.MovieCreateInput) {
+  create(@Body() createMovieDto: CreateMovieDto) {
     return this.moviesService.create(createMovieDto);
   }
 
@@ -30,10 +31,7 @@ export class MoviesController {
   }
 
   @Patch(":id")
-  update(
-    @Param("id") id: string,
-    @Body() updateMovieDto: Prisma.MovieUpdateInput,
-  ) {
+  update(@Param("id") id: string, @Body() updateMovieDto: UpdateMovieDto) {
     return this.moviesService.update(+id, updateMovieDto);
   }
 
