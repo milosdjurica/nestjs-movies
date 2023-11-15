@@ -36,11 +36,8 @@ export class MovieActorService {
   }
 
   async deleteMovieActors(movieId: number) {
-    // Assuming your Prisma model is named MovieActor
     await this.databaseService.movieActor.deleteMany({
-      where: {
-        movieId,
-      },
+      where: { movieId },
     });
   }
 }

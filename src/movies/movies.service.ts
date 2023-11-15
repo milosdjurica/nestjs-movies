@@ -104,6 +104,14 @@ export class MoviesService {
         );
       }
 
+      // ! Delete existing movies-genres relationship and create new ones
+      if (updateMovieDto.genres !== undefined) {
+        await this.moviesGenreService.deleteAndCreateNewMoviesGenre(
+          id,
+          updateMovieDto.genres,
+        );
+      }
+
       // ! Delete so i can just send object down,
       // ! because movie doesnt have actors and genres field, it only has movieActors field...
       delete updateMovieDto.actors;
