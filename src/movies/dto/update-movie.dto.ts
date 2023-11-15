@@ -1,5 +1,5 @@
-import { UpdateActorDto } from "@Src/actors/dto";
-import { UpdateGenreDto } from "@Src/genres/dto";
+import { CreateActorDto } from "@Src/actors/dto";
+import { CreateGenreDto } from "@Src/genres/dto";
 import { Type } from "class-transformer";
 import {
   IsOptional,
@@ -25,12 +25,12 @@ export class UpdateMovieDto {
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => UpdateActorDto)
-  readonly actors?: UpdateActorDto[];
+  @Type(() => CreateActorDto)
+  actors?: CreateActorDto[];
 
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => UpdateGenreDto)
-  readonly genres?: UpdateGenreDto[];
+  @Type(() => CreateGenreDto)
+  genres?: CreateGenreDto[];
 }

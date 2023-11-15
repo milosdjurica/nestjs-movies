@@ -18,6 +18,7 @@ export class MoviesService {
     private readonly moviesGenreService: MovieGenreService,
   ) {}
 
+  // ! Create
   async create(createMovieDto: CreateMovieDto) {
     try {
       // ! If exist then this will throw an error
@@ -57,6 +58,7 @@ export class MoviesService {
     }
   }
 
+  // ! Find ALL
   async findAll() {
     try {
       return await this.databaseService.movie.findMany({});
@@ -69,6 +71,7 @@ export class MoviesService {
     }
   }
 
+  // ! Find By ID
   async findOne(id: number) {
     try {
       const movie = await this.databaseService.movie.findUnique({
@@ -90,12 +93,24 @@ export class MoviesService {
     }
   }
 
+  // ! Update Movie and its MovieActor and MovieGenre relationships
   async update(id: number, updateMovieDto: UpdateMovieDto) {
     try {
-      return await this.databaseService.movie.update({
-        where: {
+      // ! Delete existing movies-actors relationship and create new ones
+      if (updateMovieDto.actors !== undefined) {
+        await this.moviesActorsService.deleteAndCreateNewMoviesActor(
           id,
-        },
+          updateMovieDto.actors,
+        );
+      }
+
+      // ! Delete so i can just send object down,
+      // ! because movie doesnt have actors and genres field, it only has movieActors field...
+      delete updateMovieDto.actors;
+      delete updateMovieDto.genres;
+
+      return await this.databaseService.movie.update({
+        where: { id },
         data: updateMovieDto,
       });
     } catch (error) {
@@ -107,6 +122,7 @@ export class MoviesService {
     }
   }
 
+  // ! Delete Movie
   async remove(id: number) {
     try {
       return await this.databaseService.movie.delete({ where: { id } });
@@ -118,9 +134,6 @@ export class MoviesService {
       );
     }
   }
-
-  // TODO Maybe i should move this to ActorsService and GenresService
-  // TODO ???????????????????????????????????????????????????????????
 
   async movieExist(title: string) {
     const movie = await this.databaseService.movie.findUnique({

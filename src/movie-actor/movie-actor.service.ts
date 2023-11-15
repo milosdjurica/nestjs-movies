@@ -6,6 +6,22 @@ import { Injectable } from "@nestjs/common";
 export class MovieActorService {
   constructor(private readonly databaseService: DatabaseService) {}
 
+  async deleteAndCreateNewMoviesActor(
+    movieId: number,
+    actors: CreateActorDto[],
+  ) {
+    await this.deleteMovieActors(movieId);
+    const movieActorsCreateData =
+      await this.createOrConnectActorsWithMovies(actors);
+
+    await this.databaseService.movie.update({
+      where: { id: movieId },
+      data: {
+        movieActors: { create: movieActorsCreateData },
+      },
+    });
+  }
+
   async createOrConnectActorsWithMovies(actors: CreateActorDto[]) {
     return Promise.all(
       actors.map(async (actor) => {
@@ -17,5 +33,14 @@ export class MovieActorService {
         return { actor: { connect: { id: createdActor.id } } };
       }),
     );
+  }
+
+  async deleteMovieActors(movieId: number) {
+    // Assuming your Prisma model is named MovieActor
+    await this.databaseService.movieActor.deleteMany({
+      where: {
+        movieId,
+      },
+    });
   }
 }
