@@ -8,7 +8,7 @@ export class ActorService {
 
   async create(createActorDto: CreateActorDto) {
     try {
-      return this.databaseService.actor.create({ data: createActorDto });
+      return await this.databaseService.actor.create({ data: createActorDto });
     } catch (error) {
       console.error(`Error with creating an actor: `, error);
       throw new Error("An error occurred while creating the actor.");
@@ -17,7 +17,7 @@ export class ActorService {
 
   async findAll() {
     try {
-      return this.databaseService.actor.findMany({});
+      return await this.databaseService.actor.findMany({});
     } catch (error) {
       console.error(`Error trying to find actors:`, error);
       throw new Error(
@@ -28,7 +28,7 @@ export class ActorService {
 
   async findOne(id: number) {
     try {
-      return this.databaseService.actor.findUnique({ where: { id } });
+      return await this.databaseService.actor.findUnique({ where: { id } });
     } catch (error) {
       console.error(`Error trying to find actor with ID ${id}:`, error);
       throw new Error("An error occurred while trying to find the actor.");
@@ -37,7 +37,7 @@ export class ActorService {
 
   async update(id: number, updateActorDto: UpdateActorDto) {
     try {
-      return this.databaseService.actor.update({
+      return await this.databaseService.actor.update({
         where: { id },
         data: updateActorDto,
       });
@@ -49,7 +49,7 @@ export class ActorService {
 
   async remove(id: number) {
     try {
-      return this.databaseService.actor.delete({ where: { id } });
+      return await this.databaseService.actor.delete({ where: { id } });
     } catch (error) {
       console.error(`Error deleting actor with ID ${id}:`, error);
       throw new Error("An error occurred while deleting the actor.");

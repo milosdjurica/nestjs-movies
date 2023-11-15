@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsInt } from "class-validator";
+import { IsOptional, IsString, IsNumber } from "class-validator";
 
 export class UpdateMovieDto {
   @IsOptional()
@@ -10,6 +10,6 @@ export class UpdateMovieDto {
   readonly description?: string;
 
   @IsOptional()
-  @IsInt()
+  @IsNumber()
   readonly length?: number;
 }

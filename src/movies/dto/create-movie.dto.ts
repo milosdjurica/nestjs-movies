@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsInt } from "class-validator";
+import { IsNotEmpty, IsString, IsNumber } from "class-validator";
 
 export class CreateMovieDto {
   @IsNotEmpty()
@@ -7,14 +7,14 @@ export class CreateMovieDto {
 
   @IsNotEmpty()
   @IsString()
-  readonly description: string;
+  description: string;
 
   @IsNotEmpty()
-  @IsInt()
+  @IsNumber()
   readonly length: number;
 
   // TODO remove this from here, and get it out of the JWT token later
   @IsNotEmpty()
-  @IsInt()
-  readonly createdById: number;
+  @IsNumber()
+  createdById: number;
 }
