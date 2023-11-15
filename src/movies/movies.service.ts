@@ -16,45 +16,31 @@ export class MoviesService {
 
   async create(createMovieDto: CreateMovieDto) {
     try {
-      // TODO Add check if movie already exist with that name or change to upsert ???
-
-      const foundMovie = await this.databaseService.movie.findUnique({
-        where: { title: createMovieDto.title },
-      });
-
-      if (foundMovie)
-        throw new ConflictException(
-          `Movie with title ${createMovieDto.title} already exist!`,
-        );
+      // ! If exist then this will throw an error
+      await this.movieExist(createMovieDto.title);
 
       // ! If no actors then pass empty array
-      const actors = createMovieDto.actors || [];
-      const genres = createMovieDto.genres || [];
+      const movieActorsCreateData = await this.createOrConnectActorsWithMovies(
+        createMovieDto.actors || [],
+      );
+      const movieGenresCreateData = await this.createOrConnectGenresWithMovies(
+        createMovieDto.genres || [],
+      );
+
       // ! Delete those properties so i can just spread object in create method
       // ! instead of manually adding every field
       delete createMovieDto.actors;
       delete createMovieDto.genres;
 
-      const movieActorsCreateData =
-        await this.createOrConnectActorsWithMovies(actors);
-
-      const movieGenresCreateData =
-        await this.createOrConnectGenresWithMovies(genres);
-
       return await this.databaseService.movie.create({
         data: {
           ...createMovieDto,
-          movieActors: {
-            create: movieActorsCreateData,
-          },
-          movieGenres: {
-            create: movieGenresCreateData,
-          },
+          movieActors: { create: movieActorsCreateData },
+          movieGenres: { create: movieGenresCreateData },
         },
       });
     } catch (error) {
       console.error(`Error creating movie: ${error.message}`);
-
       if (error instanceof HttpException) {
         throw error;
       }
@@ -70,9 +56,6 @@ export class MoviesService {
       return await this.databaseService.movie.findMany({});
     } catch (error) {
       console.error(`Could not find any movies!`, error.message);
-      if (error instanceof HttpException) {
-        throw error;
-      }
       throw new HttpException(
         `Could not find any movies!`,
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -90,10 +73,10 @@ export class MoviesService {
         throw new NotFoundException(`Could not find a movie with ID ${id}`);
       return movie;
     } catch (error) {
+      console.error(`Could not find a movie with ID ${id}:`, error.message);
       if (error instanceof HttpException) {
         throw error;
       }
-      console.error(`Could not find a movie with ID ${id}:`, error.message);
       throw new HttpException(
         `Could not find a movie with ID ${id}. Check if that item already exist.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -110,9 +93,6 @@ export class MoviesService {
         data: updateMovieDto,
       });
     } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
       console.error(`Error updating movie with ID ${id}:`, error.message);
       throw new HttpException(
         `Error updating movie with ID ${id}!`,
@@ -125,9 +105,6 @@ export class MoviesService {
     try {
       return await this.databaseService.movie.delete({ where: { id } });
     } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
       console.error(`Error deleting movie with ID ${id}:`, error.message);
       throw new HttpException(
         `Error creating movie with ID ${id}! Check if that item already exist.`,
@@ -146,7 +123,6 @@ export class MoviesService {
           update: {},
           create: actor,
         });
-
         return { actor: { connect: { id: createdActor.id } } };
       }),
     );
@@ -160,9 +136,17 @@ export class MoviesService {
           update: {},
           create: genre,
         });
-
         return { genre: { connect: { id: createdGenre.id } } };
       }),
     );
+  }
+
+  async movieExist(title: string) {
+    const movie = await this.databaseService.movie.findUnique({
+      where: { title },
+    });
+
+    if (movie)
+      throw new ConflictException(`Movie with title ${title} already exist!`);
   }
 }
