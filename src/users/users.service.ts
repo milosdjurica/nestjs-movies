@@ -1,6 +1,6 @@
 import { DatabaseService } from "@Src/database/database.service";
 import { Injectable } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
+import { CreateUserDto, UpdateUserDto } from "./dto";
 
 @Injectable()
 export class UsersService {
@@ -9,7 +9,7 @@ export class UsersService {
   // TODO create auth module, where users can auth and all that,
   // TODO this create will be reserved only for admin to add another admin
 
-  async create(createUserDto: Prisma.UserCreateInput) {
+  async create(createUserDto: CreateUserDto) {
     const user = await this.databaseService.user.create({
       data: createUserDto,
     });
@@ -34,7 +34,7 @@ export class UsersService {
     });
   }
 
-  async update(id: number, updateUserDto: Prisma.UserUpdateInput) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
     return this.databaseService.user.update({
       where: {
         id,

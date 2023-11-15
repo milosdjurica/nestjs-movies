@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from "@nestjs/common";
 import { SeriesService } from "./series.service";
 import { CreateSeriesDto, UpdateSeriesDto } from "./dto";
@@ -25,17 +26,20 @@ export class SeriesController {
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.seriesService.findOne(+id);
+  findOne(@Param("id", ParseIntPipe) id: number) {
+    return this.seriesService.findOne(id);
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateSeriesDto: UpdateSeriesDto) {
-    return this.seriesService.update(+id, updateSeriesDto);
+  update(
+    @Param("id", ParseIntPipe) id: number,
+    @Body() updateSeriesDto: UpdateSeriesDto,
+  ) {
+    return this.seriesService.update(id, updateSeriesDto);
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.seriesService.remove(+id);
+  remove(@Param("id", ParseIntPipe) id: number) {
+    return this.seriesService.remove(id);
   }
 }

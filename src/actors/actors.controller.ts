@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from "@nestjs/common";
 import { ActorsService } from "./actors.service";
 import { CreateActorDto, UpdateActorDto } from "./dto";
@@ -25,17 +26,20 @@ export class ActorsController {
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.actorService.findOne(+id);
+  findOne(@Param("id", ParseIntPipe) id: number) {
+    return this.actorService.findOne(id);
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateActorDto: UpdateActorDto) {
-    return this.actorService.update(+id, updateActorDto);
+  update(
+    @Param("id", ParseIntPipe) id: number,
+    @Body() updateActorDto: UpdateActorDto,
+  ) {
+    return this.actorService.update(id, updateActorDto);
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.actorService.remove(+id);
+  remove(@Param("id", ParseIntPipe) id: number) {
+    return this.actorService.remove(id);
   }
 }

@@ -6,16 +6,17 @@ import {
   Patch,
   Param,
   Delete,
-} from '@nestjs/common';
-import { UsersService } from './users.service';
-import { Prisma } from '@prisma/client';
+  ParseIntPipe,
+} from "@nestjs/common";
+import { UsersService } from "./users.service";
+import { CreateUserDto, UpdateUserDto } from "./dto";
 
-@Controller('users')
+@Controller("users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: Prisma.UserCreateInput) {
+  create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
@@ -25,21 +26,23 @@ export class UsersController {
     return this.usersService.findAll({ movies: true, series: true });
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  @Get(":id")
+  findOne(@Param("id", ParseIntPipe) id: number) {
+    return this.usersService.findOne(id);
   }
 
-  @Patch(':id')
+  // TODO create 2 updates: 1. Admin to update other user and can give him admin,
+  // TODO                   2. User that can only change username and password
+  @Patch(":id")
   update(
-    @Param('id') id: string,
-    @Body() updateUserDto: Prisma.UserUpdateInput,
+    @Param("id", ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
   ) {
-    return this.usersService.update(+id, updateUserDto);
+    return this.usersService.update(id, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  @Delete(":id")
+  remove(@Param("id", ParseIntPipe) id: number) {
+    return this.usersService.remove(id);
   }
 }
