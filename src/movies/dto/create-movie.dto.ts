@@ -1,4 +1,13 @@
-import { IsNotEmpty, IsString, IsNumber } from "class-validator";
+import { CreateActorDto } from "@Src/actor/dto";
+import { CreateGenreDto } from "@Src/genres/dto";
+import { Type } from "class-transformer";
+import {
+  IsNotEmpty,
+  IsString,
+  IsNumber,
+  IsArray,
+  ValidateNested,
+} from "class-validator";
 
 export class CreateMovieDto {
   @IsNotEmpty()
@@ -12,6 +21,16 @@ export class CreateMovieDto {
   @IsNotEmpty()
   @IsNumber()
   readonly length: number;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateActorDto)
+  actors?: CreateActorDto[];
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateGenreDto)
+  genres?: CreateGenreDto[];
 
   // TODO remove this from here, and get it out of the JWT token later
   @IsNotEmpty()
