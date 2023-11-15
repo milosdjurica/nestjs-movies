@@ -1,4 +1,4 @@
-import { CreateActorDto } from "@Src/actor/dto";
+import { CreateActorDto } from "@Src/actors/dto";
 import { CreateGenreDto } from "@Src/genres/dto";
 import { Type } from "class-transformer";
 import {

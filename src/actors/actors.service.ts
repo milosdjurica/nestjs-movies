@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { CreateActorDto, UpdateActorDto } from "./dto";
 
 @Injectable()
-export class ActorService {
+export class ActorsService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async create(createActorDto: CreateActorDto) {

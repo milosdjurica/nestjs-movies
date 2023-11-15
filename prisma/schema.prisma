@@ -10,7 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
   id        Int      @id @default(autoincrement())
   username  String   @unique
@@ -30,10 +29,10 @@ enum Role {
 
 model Movie {
   id          Int      @id @default(autoincrement())
-  title       String
+  title       String   @unique
   description String
   length      Int
-  createdBy   User     @relation(name: "MovieCreatedBy" ,fields: [createdById], references: [id])
+  createdBy   User     @relation(name: "MovieCreatedBy", fields: [createdById], references: [id])
   createdById Int
   movieActors MovieActor[]
   movieGenres MovieGenre[]
@@ -44,11 +43,11 @@ model Movie {
 
 model Series {
   id            Int        @id @default(autoincrement())
-  title         String
+  title         String     @unique
   description   String
   numOfSeasons  Int
   numOfEpisodes Int
-  createdBy     User       @relation(name: "SeriesCreatedBy",fields: [createdById], references: [id])
+  createdBy     User       @relation(name: "SeriesCreatedBy", fields: [createdById], references: [id])
   createdById   Int
   seriesActors  SeriesActor[]
   seriesGenres  SeriesGenre[]
@@ -59,7 +58,7 @@ model Series {
 
 model Actor {
   id            Int            @id @default(autoincrement())
-  name          String
+  name          String         @unique
   movieActors   MovieActor[]
   seriesActors  SeriesActor[]
   createdAt     DateTime       @default(now())
@@ -68,7 +67,7 @@ model Actor {
 
 model Genre {
   id            Int            @id @default(autoincrement())
-  name          String
+  name          String         @unique
   movieGenres   MovieGenre[]
   seriesGenres  SeriesGenre[]
   createdAt     DateTime       @default(now())

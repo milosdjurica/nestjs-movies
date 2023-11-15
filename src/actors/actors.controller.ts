@@ -7,12 +7,12 @@ import {
   Param,
   Delete,
 } from "@nestjs/common";
-import { ActorService } from "./actor.service";
+import { ActorsService } from "./actors.service";
 import { CreateActorDto, UpdateActorDto } from "./dto";
 
-@Controller("actor")
-export class ActorController {
-  constructor(private readonly actorService: ActorService) {}
+@Controller("actors")
+export class ActorsController {
+  constructor(private readonly actorService: ActorsService) {}
 
   @Post()
   create(@Body() createActorDto: CreateActorDto) {
