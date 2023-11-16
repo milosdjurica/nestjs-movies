@@ -96,6 +96,8 @@ export class MoviesService {
   // ! Update Movie and its MovieActor and MovieGenre relationships
   async update(id: number, updateMovieDto: UpdateMovieDto) {
     try {
+      if (updateMovieDto.title) await this.movieExist(updateMovieDto.title);
+
       // ! Delete existing movies-actors relationship and create new ones
       if (updateMovieDto.actors !== undefined) {
         await this.moviesActorsService.deleteAndCreateNewMoviesActor(
@@ -122,6 +124,7 @@ export class MoviesService {
         data: updateMovieDto,
       });
     } catch (error) {
+      if (error instanceof HttpException) throw error;
       console.error(`Error updating movie with ID ${id}:`, error.message);
       throw new HttpException(
         `Error updating movie with ID ${id}!`,
@@ -149,6 +152,8 @@ export class MoviesService {
     });
 
     if (movie)
-      throw new ConflictException(`Movie with title ${title} already exist!`);
+      throw new ConflictException(
+        `Movie with title ${title} already exist! Please provide another title`,
+      );
   }
 }

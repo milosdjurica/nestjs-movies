@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  ConflictException,
+  HttpException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { DatabaseService } from "@Src/database/database.service";
 import { CreateGenreDto, UpdateGenreDto } from "./dto";
 
@@ -35,12 +40,15 @@ export class GenresService {
 
   async update(id: number, updateGenreDto: UpdateGenreDto) {
     try {
+      await this.genreNameExist(updateGenreDto.name);
+
       return await this.databaseService.genre.update({
         where: { id },
         data: updateGenreDto,
       });
     } catch (error) {
       console.error(`Error updating genre with ID ${id}:`, error);
+      if (error instanceof HttpException) throw error;
       throw new Error("An error occurred while updating the genre.");
     }
   }
@@ -52,5 +60,15 @@ export class GenresService {
       console.error(`Error deleting genre with ID ${id}:`, error);
       throw new Error("An error occurred while deleting the genre.");
     }
+  }
+
+  async genreNameExist(name: string) {
+    const foundGenre = await this.databaseService.genre.findUnique({
+      where: { name },
+    });
+    if (foundGenre)
+      throw new ConflictException(
+        `Genre with name ${name} already exist! Please provide another name`,
+      );
   }
 }

@@ -1,5 +1,5 @@
 import { DatabaseService } from "@Src/database/database.service";
-import { Injectable } from "@nestjs/common";
+import { ConflictException, HttpException, Injectable } from "@nestjs/common";
 import { CreateActorDto, UpdateActorDto } from "./dto";
 
 @Injectable()
@@ -8,8 +8,11 @@ export class ActorsService {
 
   async create(createActorDto: CreateActorDto) {
     try {
+      await this.actorExist(createActorDto.name);
+
       return await this.databaseService.actor.create({ data: createActorDto });
     } catch (error) {
+      if (error instanceof HttpException) throw error;
       console.error(`Error with creating an actor: `, error);
       throw new Error("An error occurred while creating the actor.");
     }
@@ -37,12 +40,15 @@ export class ActorsService {
 
   async update(id: number, updateActorDto: UpdateActorDto) {
     try {
+      await this.actorExist(updateActorDto.name);
+
       return await this.databaseService.actor.update({
         where: { id },
         data: updateActorDto,
       });
     } catch (error) {
       console.error(`Error updating actor with ID ${id}:`, error);
+      if (error instanceof HttpException) throw error;
       throw new Error("An error occurred while updating the actor.");
     }
   }
@@ -54,5 +60,15 @@ export class ActorsService {
       console.error(`Error deleting actor with ID ${id}:`, error);
       throw new Error("An error occurred while deleting the actor.");
     }
+  }
+
+  async actorExist(name: string) {
+    const foundActor = await this.databaseService.actor.findUnique({
+      where: { name },
+    });
+    if (foundActor)
+      throw new ConflictException(
+        `Actor with name ${name} already exist! Please provide another name`,
+      );
   }
 }

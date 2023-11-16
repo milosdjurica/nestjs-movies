@@ -59,8 +59,8 @@ model Series {
 model Actor {
   id            Int            @id @default(autoincrement())
   name          String         @unique
-  movieActors   MovieActor[]
-  seriesActors  SeriesActor[]
+  movieActors   MovieActor[]     
+  seriesActors  SeriesActor[]   
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 }
@@ -68,8 +68,8 @@ model Actor {
 model Genre {
   id            Int            @id @default(autoincrement())
   name          String         @unique
-  movieGenres   MovieGenre[]
-  seriesGenres  SeriesGenre[]
+  movieGenres   MovieGenre[]     
+  seriesGenres  SeriesGenre[]  
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 }
@@ -90,8 +90,8 @@ model Rating {
 model MovieActor {
   movieId Int
   actorId Int
-  movie   Movie @relation(fields: [movieId], references: [id])
-  actor   Actor @relation(fields: [actorId], references: [id])
+  movie Movie                  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  actor Actor                  @relation(fields: [actorId], references: [id], onDelete: Cascade)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 
@@ -101,8 +101,8 @@ model MovieActor {
 model SeriesActor {
   seriesId Int
   actorId  Int
-  series   Series @relation(fields: [seriesId], references: [id])
-  actor    Actor  @relation(fields: [actorId], references: [id])
+  series Series                @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  actor Actor                  @relation(fields: [actorId], references: [id], onDelete: Cascade)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 
@@ -112,8 +112,8 @@ model SeriesActor {
 model MovieGenre {
   movieId Int
   genreId Int
-  movie   Movie @relation(fields: [movieId], references: [id])
-  genre   Genre @relation(fields: [genreId], references: [id])
+  movie Movie                  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  genre Genre                  @relation(fields: [genreId], references: [id], onDelete: Cascade)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 
@@ -123,8 +123,8 @@ model MovieGenre {
 model SeriesGenre {
   seriesId Int
   genreId  Int
-  series   Series @relation(fields: [seriesId], references: [id])
-  genre    Genre  @relation(fields: [genreId], references: [id])
+  series Series                @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  genre Genre                  @relation(fields: [genreId], references: [id], onDelete: Cascade)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 
