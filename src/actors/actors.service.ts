@@ -1,5 +1,11 @@
 import { DatabaseService } from "@Src/database/database.service";
-import { ConflictException, HttpException, Injectable } from "@nestjs/common";
+import {
+  ConflictException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { CreateActorDto, UpdateActorDto } from "./dto";
 
 @Injectable()
@@ -31,15 +37,25 @@ export class ActorsService {
 
   async findOne(id: number) {
     try {
-      return await this.databaseService.actor.findUnique({ where: { id } });
+      const actorExist = await this.databaseService.actor.findUnique({
+        where: { id },
+      });
+      if (!actorExist)
+        throw new NotFoundException(`Actor with ID ${id} does not exist!`);
+      return actorExist;
     } catch (error) {
       console.error(`Error trying to find actor with ID ${id}:`, error);
-      throw new Error("An error occurred while trying to find the actor.");
+      if (error instanceof HttpException) throw error;
+      throw new HttpException(
+        `An error occurred while trying to find the actor with ID ${id}.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   async update(id: number, updateActorDto: UpdateActorDto) {
     try {
+      await this.findOne(id);
       await this.actorExist(updateActorDto.name);
 
       return await this.databaseService.actor.update({

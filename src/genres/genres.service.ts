@@ -3,6 +3,7 @@ import {
   HttpException,
   Injectable,
   NotFoundException,
+  HttpStatus,
 } from "@nestjs/common";
 import { DatabaseService } from "@Src/database/database.service";
 import { CreateGenreDto, UpdateGenreDto } from "./dto";
@@ -31,15 +32,25 @@ export class GenresService {
 
   async findOne(id: number) {
     try {
-      return await this.databaseService.genre.findUnique({ where: { id } });
+      const genreExist = await this.databaseService.genre.findUnique({
+        where: { id },
+      });
+      if (!genreExist)
+        throw new NotFoundException(`Genre with ID ${id} does not exist!`);
+      return genreExist;
     } catch (error) {
       console.error(`Error fetching genre with ID ${id}:`, error);
-      throw new NotFoundException(`Genre with ID ${id} not found.`);
+      if (error instanceof HttpException) throw error;
+      throw new HttpException(
+        `An error occurred while trying to find the genre with ID ${id}.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   async update(id: number, updateGenreDto: UpdateGenreDto) {
     try {
+      await this.findOne(id);
       await this.genreNameExist(updateGenreDto.name);
 
       return await this.databaseService.genre.update({

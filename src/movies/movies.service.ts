@@ -96,6 +96,7 @@ export class MoviesService {
   // ! Update Movie and its MovieActor and MovieGenre relationships
   async update(id: number, updateMovieDto: UpdateMovieDto) {
     try {
+      await this.findOne(id);
       if (updateMovieDto.title) await this.movieExist(updateMovieDto.title);
 
       // ! Delete existing movies-actors relationship and create new ones
@@ -124,8 +125,8 @@ export class MoviesService {
         data: updateMovieDto,
       });
     } catch (error) {
-      if (error instanceof HttpException) throw error;
       console.error(`Error updating movie with ID ${id}:`, error.message);
+      if (error instanceof HttpException) throw error;
       throw new HttpException(
         `Error updating movie with ID ${id}!`,
         HttpStatus.INTERNAL_SERVER_ERROR,
