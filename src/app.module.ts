@@ -12,6 +12,7 @@ import { MovieActorModule } from "./movie-actor/movie-actor.module";
 import { MovieGenreModule } from "./movie-genre/movie-genre.module";
 import { GlobalExceptionFilter } from "./exceptions/global-exception.filter";
 import { APP_FILTER } from "@nestjs/core";
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { APP_FILTER } from "@nestjs/core";
     ActorsModule,
     MovieActorModule,
     MovieGenreModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
