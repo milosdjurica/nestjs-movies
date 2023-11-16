@@ -8,7 +8,7 @@ export class AuthController {
 
   @Post("local/register")
   registerLocal(@Body() registerDto: RegisterDto) {
-    this.authService.registerLocal(registerDto);
+    return this.authService.registerLocal(registerDto);
   }
 
   @Post("local/login")
