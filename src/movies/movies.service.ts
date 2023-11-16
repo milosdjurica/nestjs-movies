@@ -82,7 +82,7 @@ export class MoviesService {
         throw new NotFoundException(`Could not find a movie with ID ${id}`);
       return movie;
     } catch (error) {
-      console.error(`Could not find a movie with ID ${id}:`, error.message);
+      console.error(`Could not find a movie with ID ${id}.`);
       if (error instanceof HttpException) {
         throw error;
       }
@@ -137,7 +137,7 @@ export class MoviesService {
     } catch (error) {
       console.error(`Error deleting movie with ID ${id}:`, error.message);
       throw new HttpException(
-        `Error creating movie with ID ${id}! Check if that item already exist.`,
+        `Error deleting movie with ID ${id}! Check if that item already exist.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

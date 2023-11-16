@@ -8,8 +8,10 @@ import { SeriesModule } from "./series/series.module";
 import { GenresModule } from "./genres/genres.module";
 import { RatingsModule } from "./ratings/ratings.module";
 import { ActorsModule } from "./actors/actors.module";
-import { MovieActorModule } from './movie-actor/movie-actor.module';
-import { MovieGenreModule } from './movie-genre/movie-genre.module';
+import { MovieActorModule } from "./movie-actor/movie-actor.module";
+import { MovieGenreModule } from "./movie-genre/movie-genre.module";
+import { GlobalExceptionFilter } from "./exceptions/global-exception.filter";
+import { APP_FILTER } from "@nestjs/core";
 
 @Module({
   imports: [
@@ -24,6 +26,12 @@ import { MovieGenreModule } from './movie-genre/movie-genre.module';
     MovieGenreModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter,
+    },
+  ],
 })
 export class AppModule {}
