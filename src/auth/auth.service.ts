@@ -1,5 +1,5 @@
 import { DatabaseService } from "@Src/database/database.service";
-import { Injectable } from "@nestjs/common";
+import { Injectable, ForbiddenException } from "@nestjs/common";
 import { LogInDto, RegisterDto } from "./dto";
 import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
@@ -17,7 +17,6 @@ export class AuthService {
   // ! This will only be used by normal users
   // TODO In user service i will create a method for admin to add other users or other admins
   async registerLocal(registerDto: RegisterDto): Promise<Tokens> {
-    // TODO if user with that username exist, throw error to pick another username
     await this.userService.usernameExist(registerDto.username);
 
     const hash = await this.hashData(registerDto.password);
@@ -37,8 +36,31 @@ export class AuthService {
     return tokens;
   }
 
-  async logInLocal(logInDto: LogInDto) {
-    return logInDto;
+  async logInLocal(logInDto: LogInDto): Promise<Tokens> {
+    const user = await this.databaseService.user.findUnique({
+      where: {
+        username: logInDto.username,
+      },
+    });
+
+    if (!user)
+      throw new ForbiddenException(
+        `Username ${logInDto.username} does not exist!`,
+      );
+
+    const passwordMatches = await bcrypt.compare(
+      logInDto.password,
+      user.password,
+    );
+
+    // ! In reality it is always wrong password,
+    // ! but it could be that user inserted good password but for wrong username
+    if (!passwordMatches)
+      throw new ForbiddenException("Wrong username or password!");
+
+    const tokens = await this.getTokens(user.id, user.username, user.role);
+    await this.updateRtHash(user.id, tokens.refresh_token);
+    return tokens;
   }
 
   async logOutLocal() {}

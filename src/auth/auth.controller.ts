@@ -13,16 +13,16 @@ export class AuthController {
 
   @Post("local/login")
   logInLocal(@Body() logInDto: LogInDto) {
-    this.authService.logInLocal(logInDto);
+    return this.authService.logInLocal(logInDto);
   }
 
   @Post("local/logout")
   logOutLocal() {
-    this.authService.logOutLocal();
+    return this.authService.logOutLocal();
   }
 
   @Post("refresh")
   refreshTokens() {
-    this.authService.refreshTokens();
+    return this.authService.refreshTokens();
   }
 }
