@@ -1,5 +1,5 @@
 import { DatabaseService } from "@Src/database/database.service";
-import { Injectable } from "@nestjs/common";
+import { Injectable, ConflictException } from "@nestjs/common";
 import { CreateUserDto, UpdateUserDto } from "./dto";
 
 @Injectable()
@@ -49,5 +49,15 @@ export class UsersService {
         id,
       },
     });
+  }
+
+  async usernameExist(username: string) {
+    const foundUser = await this.databaseService.user.findUnique({
+      where: { username },
+    });
+    if (foundUser)
+      throw new ConflictException(
+        `User with username ${username} already exist! Please provide another username.`,
+      );
   }
 }

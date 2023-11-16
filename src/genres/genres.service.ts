@@ -79,7 +79,7 @@ export class GenresService {
     });
     if (foundGenre)
       throw new ConflictException(
-        `Genre with name ${name} already exist! Please provide another name`,
+        `Genre with name ${name} already exist! Please provide another name.`,
       );
   }
 }

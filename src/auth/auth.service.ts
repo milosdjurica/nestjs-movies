@@ -18,7 +18,7 @@ export class AuthService {
   // TODO In user service i will create a method for admin to add other users or other admins
   async registerLocal(registerDto: RegisterDto): Promise<Tokens> {
     // TODO if user with that username exist, throw error to pick another username
-    // const userExist = await this.userService.findOne(registerDto.username);
+    await this.userService.usernameExist(registerDto.username);
 
     const hash = await this.hashData(registerDto.password);
     const newUser = await this.databaseService.user.create({
