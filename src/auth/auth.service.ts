@@ -78,7 +78,22 @@ export class AuthService {
     });
   }
 
-  async refreshTokens() {}
+  async refreshTokens(id: number, refreshToken: string) {
+    const user = await this.databaseService.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) throw new ForbiddenException(`No user with ID ${id} !`);
+
+    const rtMatches = await bcrypt.compare(refreshToken, user.hashedRt);
+
+    if (!rtMatches)
+      throw new ForbiddenException("You do not have valid credentials!");
+
+    const tokens = await this.getTokens(user.id, user.username, user.role);
+    await this.updateRtHash(user.id, tokens.refresh_token);
+    return tokens;
+  }
 
   async updateRtHash(id: number, rt: string) {
     const hash = await this.hashData(rt);
