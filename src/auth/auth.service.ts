@@ -63,7 +63,20 @@ export class AuthService {
     return tokens;
   }
 
-  async logOutLocal() {}
+  async logOutLocal(id: number) {
+    // ! updateMany so i can pass in hashedRt not null and prevent logout spam
+    await this.databaseService.user.updateMany({
+      where: {
+        id,
+        hashedRt: {
+          not: null,
+        },
+      },
+      data: {
+        hashedRt: null,
+      },
+    });
+  }
 
   async refreshTokens() {}
 
