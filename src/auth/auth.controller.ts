@@ -9,17 +9,24 @@ import {
 import { AuthService } from "./auth.service";
 import { LogInDto, RegisterDto } from "./dto";
 import { AtGuard, RtGuard } from "@Src/common/guards";
-import { GetCurrentUser, GetCurrentUserId } from "@Src/common/decorators";
+import {
+  GetCurrentUser,
+  GetCurrentUserId,
+  Public,
+} from "@Src/common/decorators";
 
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @HttpCode(HttpStatus.CREATED)
   @Post("local/register")
   registerLocal(@Body() registerDto: RegisterDto) {
     return this.authService.registerLocal(registerDto);
   }
+
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Post("local/login")
   logInLocal(@Body() logInDto: LogInDto) {
@@ -33,6 +40,7 @@ export class AuthController {
     return this.authService.logOutLocal(userId);
   }
 
+  @Public()
   @UseGuards(RtGuard)
   @HttpCode(HttpStatus.OK)
   @Post("refresh")

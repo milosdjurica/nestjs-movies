@@ -78,6 +78,8 @@ export class AuthService {
     const user = await this.databaseService.user.findUnique({ where: { id } });
 
     if (!user) throw new ForbiddenException(`No user with ID ${id} !`);
+    if (!user.hashedRt)
+      throw new ForbiddenException(`User is compromised! No tokens!`);
 
     const rtMatches = await bcrypt.compare(refreshToken, user.hashedRt);
 
