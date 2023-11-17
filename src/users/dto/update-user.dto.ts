@@ -6,6 +6,8 @@ export class UpdateUserDto {
   @IsString()
   readonly username?: string;
 
+  // TODO maybe add old password to check if they match
+
   @IsOptional()
   @IsString()
   password?: string;

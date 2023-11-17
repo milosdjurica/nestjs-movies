@@ -8,12 +8,16 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  Query,
 } from "@nestjs/common";
+import { Role } from "@prisma/client";
+
+import { Roles } from "@Src/common/decorators";
+import { RolesGuard, UserCanChange } from "@Src/common/guards";
+import { ParseOptionalBooleanPipe } from "@Src/common/pipes";
+
 import { UsersService } from "./users.service";
 import { ChangeRoleDto, CreateUserDto, UpdateUserDto } from "./dto";
-import { Roles } from "@Src/common/decorators";
-import { Role } from "@prisma/client";
-import { RolesGuard, UserCanChange } from "@Src/common/guards";
 
 @Controller("users")
 export class UsersController {
@@ -29,15 +33,20 @@ export class UsersController {
   @Roles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @Get()
-  // TODO pass movies and series as query params or something, (default should be false?)
-  findAll() {
-    return this.usersService.findAll({ movies: true, series: true });
+  findAll(
+    @Query("movies", ParseOptionalBooleanPipe) movies: boolean,
+    @Query("series", ParseOptionalBooleanPipe) series: boolean,
+  ) {
+    return this.usersService.findAll(movies, series);
   }
 
-  // TODO Should check from JWT if ID === /:id
   @Get(":id")
-  findOne(@Param("id", ParseIntPipe) id: number) {
-    return this.usersService.findOne(id);
+  findOne(
+    @Param("id", ParseIntPipe) id: number,
+    @Query("movies", ParseOptionalBooleanPipe) movies: boolean,
+    @Query("series", ParseOptionalBooleanPipe) series: boolean,
+  ) {
+    return this.usersService.findOne(id, movies, series);
   }
 
   @UseGuards(UserCanChange)
@@ -60,7 +69,6 @@ export class UsersController {
     return this.usersService.changeRole(id, changeRoleDto);
   }
 
-  // TODO Should check from JWT if ID === /:id
   @UseGuards(UserCanChange)
   @Delete(":id")
   remove(@Param("id", ParseIntPipe) id: number) {

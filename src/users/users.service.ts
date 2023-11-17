@@ -21,11 +21,11 @@ export class UsersService {
     return user;
   }
 
-  async findAll({ movies, series }: { movies: boolean; series: boolean }) {
+  async findAll(includeMovies?: boolean, includeSeries?: boolean) {
     const users = await this.databaseService.user.findMany({
       include: {
-        movies,
-        series,
+        movies: includeMovies,
+        series: includeSeries,
       },
     });
 
@@ -33,11 +33,12 @@ export class UsersService {
     return users.map((user) => this.exclude(user, ["password", "hashedRt"]));
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, movies?: boolean, series?: boolean) {
     try {
       // TODO also pass include: {movies, series}
       const userExist = await this.databaseService.user.findUnique({
         where: { id },
+        include: { movies, series },
       });
       if (!userExist)
         throw new NotFoundException(`User with ID ${id} does not exist!`);
@@ -54,7 +55,6 @@ export class UsersService {
     }
   }
 
-  // TODO maybe split into 3 parts,
   async update(id: number, updateUserDto: UpdateUserDto) {
     await this.findOne(id);
     // ! check if new username is already taken,
