@@ -59,15 +59,31 @@ export class MoviesService {
   }
 
   // ! Find ALL
-  async findAll(actors?: boolean, genres?: boolean) {
+  async findAll(
+    includeActors?: boolean,
+    includeGenres?: boolean,
+    isActing?: string,
+    hasGenres?: string,
+    allActors?: boolean,
+    allGenres?: boolean,
+  ) {
     try {
-      // ! Helpers for prisma query, extracted them for cleaner code
-      const movieActors = actors ? { select: { actor: actors } } : false;
-      const movieGenres = genres ? { select: { genre: genres } } : false;
+      // ! Get prisma queries, extracted them for cleaner code
+      const { movieActors, movieGenres, actorQuery, genreQuery } =
+        this.getConstants(includeActors, includeGenres, isActing, hasGenres);
 
-      return await this.databaseService.movie.findMany({
+      let movies = await this.databaseService.movie.findMany({
+        where: {
+          movieActors: actorQuery,
+          movieGenres: genreQuery,
+        },
         include: { movieActors, movieGenres },
       });
+      if (!allActors && !allGenres) return movies;
+
+      // TODO Update movies object depending on boolean values allActors and allGenres
+      movies = [];
+      return movies;
     } catch (error) {
       console.error(`Could not find any movies!`, error.message);
       throw new HttpException(
@@ -82,6 +98,7 @@ export class MoviesService {
     try {
       const movieActors = actors ? { select: { actor: actors } } : false;
       const movieGenres = genres ? { select: { genre: genres } } : false;
+
       const movie = await this.databaseService.movie.findUnique({
         where: { id },
         include: { movieActors, movieGenres },
@@ -165,5 +182,32 @@ export class MoviesService {
       throw new ConflictException(
         `Movie with title ${title} already exist! Please provide another title`,
       );
+  }
+
+  getConstants(
+    includeActors: boolean,
+    includeGenres: boolean,
+    isActing: string,
+    hasGenres: string,
+  ) {
+    const actors = isActing?.split(",");
+    const genres = hasGenres?.split(",");
+
+    const movieActors = includeActors
+      ? { select: { actor: includeActors } }
+      : false;
+    const movieGenres = includeGenres
+      ? { select: { genre: includeGenres } }
+      : false;
+
+    const actorQuery = actors
+      ? { some: { actor: { name: { in: actors } } } }
+      : {};
+
+    const genreQuery = genres
+      ? { some: { genre: { name: { in: genres } } } }
+      : {};
+
+    return { movieActors, movieGenres, actorQuery, genreQuery };
   }
 }

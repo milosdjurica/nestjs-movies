@@ -33,8 +33,20 @@ export class MoviesController {
   findAll(
     @Query("actors", ParseOptionalBooleanPipe) actors: boolean,
     @Query("genres", ParseOptionalBooleanPipe) genres: boolean,
+    @Query("isActing") actorName: string,
+    @Query("hasGenre") hasGenre: string,
+    // TODO if AllActors=TRUE then it should return a movies where ALL named actors are acting
+    @Query("allActors", ParseOptionalBooleanPipe) allActors: boolean,
+    @Query("allGenres", ParseOptionalBooleanPipe) allGenres: boolean,
   ) {
-    return this.moviesService.findAll(actors, genres);
+    return this.moviesService.findAll(
+      actors,
+      genres,
+      actorName,
+      hasGenre,
+      allActors,
+      allGenres,
+    );
   }
 
   @Get(":id")
