@@ -8,12 +8,14 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  Query,
 } from "@nestjs/common";
 import { MoviesService } from "./movies.service";
 import { CreateMovieDto, UpdateMovieDto } from "./dto";
 import { Roles } from "@Src/common/decorators";
 import { RolesGuard } from "@Src/common/guards";
 import { Role } from "@prisma/client";
+import { ParseOptionalBooleanPipe } from "@Src/common/pipes";
 
 @Controller("movies")
 export class MoviesController {
@@ -28,13 +30,20 @@ export class MoviesController {
   }
 
   @Get()
-  findAll() {
-    return this.moviesService.findAll();
+  findAll(
+    @Query("actors", ParseOptionalBooleanPipe) actors: boolean,
+    @Query("genres", ParseOptionalBooleanPipe) genres: boolean,
+  ) {
+    return this.moviesService.findAll(actors, genres);
   }
 
   @Get(":id")
-  findOne(@Param("id", ParseIntPipe) id: number) {
-    return this.moviesService.findOne(id);
+  findOne(
+    @Param("id", ParseIntPipe) id: number,
+    @Query("actors", ParseOptionalBooleanPipe) actors: boolean,
+    @Query("genres", ParseOptionalBooleanPipe) genres: boolean,
+  ) {
+    return this.moviesService.findOne(id, actors, genres);
   }
 
   @Roles(Role.ADMIN)

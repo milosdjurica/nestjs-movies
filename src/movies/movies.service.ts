@@ -59,9 +59,15 @@ export class MoviesService {
   }
 
   // ! Find ALL
-  async findAll() {
+  async findAll(actors?: boolean, genres?: boolean) {
     try {
-      return await this.databaseService.movie.findMany({});
+      // ! Helpers for prisma query, extracted them for cleaner code
+      const movieActors = actors ? { select: { actor: actors } } : false;
+      const movieGenres = genres ? { select: { genre: genres } } : false;
+
+      return await this.databaseService.movie.findMany({
+        include: { movieActors, movieGenres },
+      });
     } catch (error) {
       console.error(`Could not find any movies!`, error.message);
       throw new HttpException(
@@ -72,10 +78,13 @@ export class MoviesService {
   }
 
   // ! Find By ID
-  async findOne(id: number) {
+  async findOne(id: number, actors?: boolean, genres?: boolean) {
     try {
+      const movieActors = actors ? { select: { actor: actors } } : false;
+      const movieGenres = genres ? { select: { genre: genres } } : false;
       const movie = await this.databaseService.movie.findUnique({
         where: { id },
+        include: { movieActors, movieGenres },
       });
 
       if (!movie)
