@@ -68,20 +68,14 @@ export class AuthService {
     await this.databaseService.user.updateMany({
       where: {
         id,
-        hashedRt: {
-          not: null,
-        },
+        hashedRt: { not: null },
       },
-      data: {
-        hashedRt: null,
-      },
+      data: { hashedRt: null },
     });
   }
 
   async refreshTokens(id: number, refreshToken: string) {
-    const user = await this.databaseService.user.findUnique({
-      where: { id },
-    });
+    const user = await this.databaseService.user.findUnique({ where: { id } });
 
     if (!user) throw new ForbiddenException(`No user with ID ${id} !`);
 
