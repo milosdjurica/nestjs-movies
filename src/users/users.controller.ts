@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
-import { CreateUserDto, UpdateUserDto } from "./dto";
+import { ChangeRoleDto, CreateUserDto, UpdateUserDto } from "./dto";
 import { Roles } from "@Src/common/decorators";
 import { Role } from "@prisma/client";
 import { RolesGuard, UserCanChange } from "@Src/common/guards";
@@ -40,8 +40,6 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  // TODO create 2 updates: 1. Admin to update other user and can give him admin,
-  // TODO                   2. User that can only change username and password
   @UseGuards(UserCanChange)
   @Patch(":id")
   update(
@@ -49,6 +47,17 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     return this.usersService.update(id, updateUserDto);
+  }
+
+  // ! change role (only admin can change it for user)
+  @Roles(Role.ADMIN)
+  @UseGuards(RolesGuard)
+  @Patch("admin/:id")
+  changeRole(
+    @Param("id", ParseIntPipe) id: number,
+    @Body() changeRoleDto: ChangeRoleDto,
+  ) {
+    return this.usersService.changeRole(id, changeRoleDto);
   }
 
   // TODO Should check from JWT if ID === /:id
