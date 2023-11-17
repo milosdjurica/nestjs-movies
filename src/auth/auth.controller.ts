@@ -8,7 +8,7 @@ import {
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { LogInDto, RegisterDto } from "./dto";
-import { AtGuard, RtGuard } from "@Src/common/guards";
+import { RtGuard } from "@Src/common/guards";
 import {
   GetCurrentUser,
   GetCurrentUserId,
@@ -33,7 +33,6 @@ export class AuthController {
     return this.authService.logInLocal(logInDto);
   }
 
-  @UseGuards(AtGuard)
   @HttpCode(HttpStatus.OK)
   @Post("local/logout")
   logOutLocal(@GetCurrentUserId() userId: number) {
