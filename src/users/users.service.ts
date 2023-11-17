@@ -14,9 +14,6 @@ import { ChangeRoleDto, CreateUserDto, UpdateUserDto } from "./dto";
 export class UsersService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  // TODO create auth module, where users can auth and all that,
-  // TODO this create will be reserved only for admin to add another admin
-
   async create(createUserDto: CreateUserDto) {
     const user = await this.databaseService.user.create({
       data: createUserDto,
@@ -24,25 +21,29 @@ export class UsersService {
     return user;
   }
 
-  // TODO exclude password and hasahedRt
   async findAll({ movies, series }: { movies: boolean; series: boolean }) {
-    return await this.databaseService.user.findMany({
+    const users = await this.databaseService.user.findMany({
       include: {
         movies,
         series,
       },
     });
+
+    // ! Excluding password and hashedRt
+    return users.map((user) => this.exclude(user, ["password", "hashedRt"]));
   }
 
   async findOne(id: number) {
     try {
       // TODO also pass include: {movies, series}
-      const userExist = await this.databaseService.genre.findUnique({
+      const userExist = await this.databaseService.user.findUnique({
         where: { id },
       });
       if (!userExist)
         throw new NotFoundException(`User with ID ${id} does not exist!`);
-      return userExist;
+
+      // ! Excluding password and hashedRt
+      return this.exclude(userExist, ["password", "hashedRt"]);
     } catch (error) {
       console.error(`Error fetching user with ID ${id}:`, error);
       if (error instanceof HttpException) throw error;
@@ -65,38 +66,43 @@ export class UsersService {
       const hashPass = await this.hashData(updateUserDto.password);
       // ! deleting so i can spread updateUserDto
       delete updateUserDto.password;
-      return await this.databaseService.user.update({
+      const updatedUser = await this.databaseService.user.update({
         where: { id },
         data: {
           password: hashPass,
           ...updateUserDto,
         },
       });
+      return this.exclude(updatedUser, ["password", "hashedRt"]);
     }
 
     // ! this code executes if there is no password field provided, then we just update everything
-    return await this.databaseService.user.update({
+    const updatedUser = await this.databaseService.user.update({
       where: { id },
       data: updateUserDto,
     });
+    return this.exclude(updatedUser, ["password", "hashedRt"]);
   }
 
   // ! change role (only admin can change it for user)
   async changeRole(id: number, changeRoleDto: ChangeRoleDto) {
-    return await this.databaseService.user.update({
+    const updatedUser = await this.databaseService.user.update({
       where: { id },
       data: changeRoleDto,
     });
+    return this.exclude(updatedUser, ["password", "hashedRt"]);
   }
 
   async remove(id: number) {
-    return await this.databaseService.user.delete({
+    const deletedUser = await this.databaseService.user.delete({
       where: {
         id,
       },
     });
+    return this.exclude(deletedUser, ["password", "hashedRt"]);
   }
 
+  // !!!!!!!!!!!!!! HELPER FUNCTIONS
   async usernameExist(username: string) {
     const foundUser = await this.databaseService.user.findUnique({
       where: { username },
@@ -109,5 +115,15 @@ export class UsersService {
 
   hashData(data: string) {
     return bcrypt.hash(data, 10);
+  }
+
+  // ! Helper function to exclude fields like password and hashedRt from user
+  exclude<User, Key extends keyof User>(
+    user: User,
+    keys: Key[],
+  ): Omit<User, Key> {
+    return Object.fromEntries(
+      Object.entries(user).filter(([key]) => !keys.includes(key as Key)),
+    ) as Omit<User, Key>;
   }
 }
