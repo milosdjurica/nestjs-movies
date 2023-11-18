@@ -24,7 +24,6 @@ import {
 export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
 
-  // TODO add createdBy ID from JWT token (ID of user who is creating this movie)
   @Roles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @Post()
@@ -37,6 +36,7 @@ export class MoviesController {
 
   @Get()
   findAll(
+    // TODO add query string for GTE LTE EQUALS rating
     @Query("page", new ParseIntPipe({ optional: true })) page: number = 1,
     @Query("perPage", new ParseIntPipe({ optional: true }))
     perPage: number = 10,

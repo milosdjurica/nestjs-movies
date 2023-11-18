@@ -86,7 +86,7 @@ export class MoviesService {
       const actorQuery = { some: { actor: { name: { in: actorsArr } } } };
       const genreQuery = { some: { genre: { name: { in: genresArr } } } };
 
-      // TODO Add ratings after finishing Ratings module
+      // TODO Add movieRatings query i include movieRatings
       const movies = await this.databaseService.movie.findMany({
         where: { movieActors: actorQuery, movieGenres: genreQuery },
         skip: (page - 1) * perPage,
