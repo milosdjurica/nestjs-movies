@@ -1,17 +1,11 @@
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  Min,
-} from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, Min } from "class-validator";
 
 export class CreateSeriesDto {
   @IsNotEmpty()
   @IsString()
   readonly title: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   description: string;
 
@@ -24,9 +18,4 @@ export class CreateSeriesDto {
   @IsNumber()
   @Min(1)
   numOfEpisodes: number;
-
-  // TODO remove this from here, and get it out of the JWT token later
-  @IsNotEmpty()
-  @IsNumber()
-  createdById: number;
 }

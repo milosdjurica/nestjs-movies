@@ -19,7 +19,7 @@ export class MoviesService {
   ) {}
 
   // ! Create
-  async create(createMovieDto: CreateMovieDto) {
+  async create(createMovieDto: CreateMovieDto, userId: number) {
     try {
       // ! If exist then this will throw an error
       await this.movieExist(createMovieDto.title);
@@ -41,6 +41,7 @@ export class MoviesService {
 
       return await this.databaseService.movie.create({
         data: {
+          createdById: userId,
           ...createMovieDto,
           movieActors: { create: movieActorsCreateData },
           movieGenres: { create: movieGenresCreateData },

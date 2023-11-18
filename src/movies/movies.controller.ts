@@ -12,7 +12,7 @@ import {
 } from "@nestjs/common";
 import { MoviesService } from "./movies.service";
 import { CreateMovieDto, UpdateMovieDto } from "./dto";
-import { Roles } from "@Src/common/decorators";
+import { GetCurrentUserId, Roles } from "@Src/common/decorators";
 import { RolesGuard } from "@Src/common/guards";
 import { Role } from "@prisma/client";
 import {
@@ -28,8 +28,11 @@ export class MoviesController {
   @Roles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @Post()
-  create(@Body() createMovieDto: CreateMovieDto) {
-    return this.moviesService.create(createMovieDto);
+  create(
+    @Body() createMovieDto: CreateMovieDto,
+    @GetCurrentUserId() userId: number,
+  ) {
+    return this.moviesService.create(createMovieDto, userId);
   }
 
   @Get()

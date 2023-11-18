@@ -11,7 +11,7 @@ import {
 } from "@nestjs/common";
 import { SeriesService } from "./series.service";
 import { CreateSeriesDto, UpdateSeriesDto } from "./dto";
-import { Roles } from "@Src/common/decorators";
+import { GetCurrentUserId, Roles } from "@Src/common/decorators";
 import { Role } from "@prisma/client";
 import { RolesGuard } from "@Src/common/guards";
 
@@ -22,10 +22,15 @@ export class SeriesController {
   @Roles(Role.ADMIN)
   @UseGuards(RolesGuard)
   @Post()
-  create(@Body() createSeriesDto: CreateSeriesDto) {
-    return this.seriesService.create(createSeriesDto);
+  create(
+    @Body() createSeriesDto: CreateSeriesDto,
+    @GetCurrentUserId() userId: number,
+  ) {
+    return this.seriesService.create(createSeriesDto, userId);
   }
 
+  // TODO filter by rating, number of seasons, number of episodes, actors, genres,
+  // TODO include actors, genres and ratings in, and add page and perPage
   @Get()
   findAll() {
     return this.seriesService.findAll();

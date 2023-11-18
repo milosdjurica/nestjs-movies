@@ -34,9 +34,4 @@ export class CreateMovieDto {
   @ValidateNested({ each: true })
   @Type(() => CreateGenreDto)
   genres?: CreateGenreDto[];
-
-  // TODO remove this from here, and get it out of the JWT token later
-  @IsNotEmpty()
-  @IsNumber()
-  createdById: number;
 }

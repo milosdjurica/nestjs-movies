@@ -6,10 +6,14 @@ import { CreateSeriesDto, UpdateSeriesDto } from "./dto";
 export class SeriesService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async create(createSeriesDto: CreateSeriesDto) {
+  async create(createSeriesDto: CreateSeriesDto, userId: number) {
+    // TODO check if already exist AND add option to include actors and genres when creating
     try {
       return await this.databaseService.series.create({
-        data: createSeriesDto,
+        data: {
+          createdById: userId,
+          ...createSeriesDto,
+        },
       });
     } catch (error) {
       console.error("Error creating series:", error);
