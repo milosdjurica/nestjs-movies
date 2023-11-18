@@ -60,6 +60,8 @@ export class MoviesService {
 
   // ! Find ALL
   async findAll(
+    page: number,
+    perPage: number,
     includeActors?: boolean,
     includeGenres?: boolean,
     actorNames?: string,
@@ -83,6 +85,8 @@ export class MoviesService {
 
       const movies = await this.databaseService.movie.findMany({
         where: { movieActors: actorQuery, movieGenres: genreQuery },
+        skip: (page - 1) * perPage,
+        take: perPage,
         include: { movieActors, movieGenres },
       });
 

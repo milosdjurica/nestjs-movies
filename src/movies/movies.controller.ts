@@ -31,8 +31,12 @@ export class MoviesController {
 
   @Get()
   findAll(
+    @Query("page", new ParseIntPipe({ optional: true })) page: number = 1,
+    @Query("perPage", new ParseIntPipe({ optional: true }))
+    perPage: number = 10,
     @Query("includeActors", ParseOptionalBooleanPipe) includeActors: boolean,
     @Query("includeGenres", ParseOptionalBooleanPipe) includeGenres: boolean,
+
     // * If use actorNames and genreNames in combination -> it will only return movies with BOTH :
     // * all movies that have at least one Actor from provided actors,
     // * and at the same time at least one genre from provided genres
@@ -42,6 +46,8 @@ export class MoviesController {
     @Query("genreNames") genreNames: string,
   ) {
     return this.moviesService.findAll(
+      page,
+      perPage,
       includeActors,
       includeGenres,
       actorNames,
