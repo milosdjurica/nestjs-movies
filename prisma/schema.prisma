@@ -11,16 +11,17 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  password  String
-  hashedRt  String?
-  role      Role     @default(USER)
-  ratings   Rating[]
-  movies    Movie[]  @relation("MovieCreatedBy")
-  series    Series[] @relation("SeriesCreatedBy")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              Int      @id @default(autoincrement())
+  username        String   @unique
+  password        String
+  hashedRt        String?
+  role            Role     @default(USER)
+  movies          Movie[]  @relation("MovieCreatedBy")
+  series          Series[] @relation("SeriesCreatedBy")
+  movieRatings    MovieRating[]
+  seriesRatings   SeriesRating[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 enum Role {
@@ -37,7 +38,7 @@ model Movie {
   createdById Int
   movieActors MovieActor[]
   movieGenres MovieGenre[]
-  ratings     Rating[]
+  ratings     MovieRating[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -52,7 +53,7 @@ model Series {
   createdById   Int
   seriesActors  SeriesActor[]
   seriesGenres  SeriesGenre[]
-  ratings       Rating[]
+  ratings       SeriesRating[]
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
 }
@@ -74,14 +75,22 @@ model Genre {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 }
-
-model Rating {
+model MovieRating {
   id          Int      @id @default(autoincrement())
   score       Int
-  movie       Movie?   @relation(fields: [movieId], references: [id])
-  movieId     Int?
-  series      Series?  @relation(fields: [seriesId], references: [id])
-  seriesId    Int?
+  movie       Movie    @relation(fields: [movieId], references: [id])
+  movieId     Int
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdById Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SeriesRating {
+  id          Int      @id @default(autoincrement())
+  score       Int
+  series      Series   @relation(fields: [seriesId], references: [id])
+  seriesId    Int
   createdBy   User     @relation(fields: [createdById], references: [id])
   createdById Int
   createdAt   DateTime @default(now())
