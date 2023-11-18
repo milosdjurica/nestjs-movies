@@ -26,6 +26,8 @@ export class MovieRatingsController {
   }
 
   @Get()
+  // TODO query find all for specific user or specific movie or find all greater than or less than or equal
+  // TODO include movies and users objects ???
   findAll() {
     return this.movieRatingsService.findAll();
   }
@@ -35,16 +37,26 @@ export class MovieRatingsController {
     return this.movieRatingsService.findOne(id);
   }
 
+  // TODO user can update only his ratings
   @Patch(":id")
   update(
-    @Param("id", ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) movieRatingId: number,
     @Body() updateMovieRatingDto: UpdateMovieRatingDto,
+    @GetCurrentUserId() userId: number,
   ) {
-    return this.movieRatingsService.update(id, updateMovieRatingDto);
+    return this.movieRatingsService.update(
+      movieRatingId,
+      updateMovieRatingDto,
+      userId,
+    );
   }
 
+  // TODO user can delete only his ratings
   @Delete(":id")
-  remove(@Param("id", ParseIntPipe) id: number) {
-    return this.movieRatingsService.remove(id);
+  remove(
+    @Param("id", ParseIntPipe) id: number,
+    @GetCurrentUserId() userId: number,
+  ) {
+    return this.movieRatingsService.remove(id, userId);
   }
 }
