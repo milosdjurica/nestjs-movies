@@ -6,7 +6,6 @@ import { UsersModule } from "./users/users.module";
 import { MoviesModule } from "./movies/movies.module";
 import { SeriesModule } from "./series/series.module";
 import { GenresModule } from "./genres/genres.module";
-import { RatingsModule } from "./ratings/ratings.module";
 import { ActorsModule } from "./actors/actors.module";
 import { MovieActorModule } from "./movie-actor/movie-actor.module";
 import { MovieGenreModule } from "./movie-genre/movie-genre.module";
@@ -14,6 +13,7 @@ import { GlobalExceptionFilter } from "./common/exceptions/global-exception.filt
 import { APP_FILTER, APP_GUARD } from "@nestjs/core";
 import { AuthModule } from "./auth/auth.module";
 import { AtGuard } from "./common/guards";
+import { MovieRatingsModule } from "./movie-ratings/movie-ratings.module";
 
 @Module({
   imports: [
@@ -22,11 +22,11 @@ import { AtGuard } from "./common/guards";
     MoviesModule,
     SeriesModule,
     GenresModule,
-    RatingsModule,
     ActorsModule,
     MovieActorModule,
     MovieGenreModule,
     AuthModule,
+    MovieRatingsModule,
   ],
   controllers: [AppController],
   providers: [
