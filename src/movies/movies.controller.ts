@@ -31,21 +31,21 @@ export class MoviesController {
 
   @Get()
   findAll(
-    @Query("actors", ParseOptionalBooleanPipe) actors: boolean,
-    @Query("genres", ParseOptionalBooleanPipe) genres: boolean,
-    @Query("isActing") actorName: string,
-    @Query("hasGenre") hasGenre: string,
-    // TODO if AllActors=TRUE then it should return a movies where ALL named actors are acting
-    @Query("allActors", ParseOptionalBooleanPipe) allActors: boolean,
-    @Query("allGenres", ParseOptionalBooleanPipe) allGenres: boolean,
+    @Query("includeActors", ParseOptionalBooleanPipe) includeActors: boolean,
+    @Query("includeGenres", ParseOptionalBooleanPipe) includeGenres: boolean,
+    // * If use actorNames and genreNames in combination -> it will only return movies with BOTH :
+    // * all movies that have at least one Actor from provided actors,
+    // * and at the same time at least one genre from provided genres
+    // ! Example: /movies?actorNames=Leonardo%20DiCaprio&genreNames=Horror
+    // ! it will look for horror in which Leonardo DiCaprio is actor !!!
+    @Query("actorNames") actorNames: string,
+    @Query("genreNames") genreNames: string,
   ) {
     return this.moviesService.findAll(
-      actors,
-      genres,
-      actorName,
-      hasGenre,
-      allActors,
-      allGenres,
+      includeActors,
+      includeGenres,
+      actorNames,
+      genreNames,
     );
   }
 
