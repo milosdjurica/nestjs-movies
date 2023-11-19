@@ -1,73 +1,186 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+<a name="readme-top"></a>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <!-- <a href="https://github.com/milosdjurica/nestjs-movies">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a> -->
 
-## Description
+<h3 align="center">NestJS Movies Backend</h3>
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+  <p align="center">
+    Short description here
+    <br />
+    <a href="https://github.com/milosdjurica/nestjs-movies"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/milosdjurica/nestjs-movies">View Demo</a>
+    ·
+    <a href="https://github.com/milosdjurica/nestjs-movies/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/milosdjurica/nestjs-movies/issues">Request Feature</a>
+  </p>
+</div>
 
-## Installation
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
 
-```bash
-$ yarn install
-```
+<!-- ABOUT THE PROJECT -->
 
-## Running the app
+## About The Project
 
-```bash
-# development
-$ yarn run start
+[![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-# watch mode
-$ yarn run start:dev
+I created this Movies&Series API to showcase my backend development skills. Project is created using NestJS and PostgreSQL database. It's designed to cover all essential things needed for production ready backend project.
 
-# production mode
-$ yarn run start:prod
-```
+Following best practices
 
-## Test
+Some things you can find in this project:
 
-```bash
-# unit tests
-$ yarn run test
+- **TypeScript** - ensuring a robust and type-safe codebase.
+- **Prisma** - ORM mapper between API and relational ot document-oriented database - PostgreSQL in this case. Used to create tables and to define relationships between tables. Also applying database migrations simplifying complex SQL queries.
+- **Authentication with JWT and Refresh Token**. Following best practices like hashing password before storing it into the database, and also hashing refresh tokens.
+- **Role-based Authorization** - ADMIN and USER roles. Admins can create update and delete Movies, Series, Actors and Genres. Users can only see info of those tables and add/update/delete Ratings
+- **Filter queries** - Giving possibility to include all actors/genres/ratings for specific movie/series. Also you can provide list of actor names or genre names or both, and get all movies/series that match those filters. There are also some other options, and there are many more to add, but i didn't want to go too deep because i think this was enough to showcase my understanding of how filter queries work.
+- **Pagination** - Users can choose which page to see and how many movies/series per page they want to see. Default is page 1 and 10 movies/series per page
+- **Projections** - When returning users from database, hashed password and hashed refresh token are left out.
+- **Exception Handling** - Covering exceptions and displaying appropriate errors, error messages and status codes when handling errors.
+- **Usage of environment variables** - for Database_Url and Access_Token_Secret and Refresh_Token_Secret
+- **Dependency injection** - NestJS is heavily oriented towards this pattern
+- **TODO: Tests** - I am planning to add unit tests and integration tests in the close future
 
-# e2e tests
-$ yarn run test:e2e
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-# test coverage
-$ yarn run test:cov
-```
+### Built With
 
-## Support
+- NestJS
+- PostgreSQL
+- TypeScript
+- Prisma ORM
+- Passport - for authentication
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Stay in touch
+<!-- GETTING STARTED -->
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Getting Started
 
-## License
+In the next part i will explain how you can start this project locally on your machine.
 
-Nest is [MIT licensed](LICENSE).
+### Prerequisites
+
+You will need Node.js and PostgreSQL database.
+
+- npm
+  ```sh
+  npm install npm@latest -g
+  ```
+
+### Installation
+
+1. Get a free API Key at [https://example.com](https://example.com)
+2. Clone the repo
+   ```sh
+   git clone https://github.com/milosdjurica/nestjs-movies.git
+   ```
+3. Install NPM packages
+   ```sh
+   npm install
+   ```
+4. Enter your API in `config.js`
+   ```js
+   const API_KEY = "ENTER YOUR API";
+   ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- USAGE EXAMPLES -->
+
+## Usage
+
+This project is meant to showcase my backend skills as a developer. I think it covers basic principles needed to know for backend development in production.
+
+_For more examples, please refer to the [Documentation](https://example.com)_
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- ROADMAP -->
+
+<!-- ## Roadmap
+
+- [ ] Feature 1
+- [ ] Feature 2
+- [ ] Feature 3
+  - [ ] Nested Feature
+
+See the [open issues](https://github.com/milosdjurica/nestjs-movies/issues) for a full list of proposed features (and known issues).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p> -->
+
+<!-- CONTRIBUTING -->
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Contact
+
+Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+
+Project Link: [https://github.com/milosdjurica/nestjs-movies](https://github.com/milosdjurica/nestjs-movies)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+[contributors-shield]: https://img.shields.io/github/contributors/milosdjurica/nestjs-movies.svg?style=for-the-badge
+[contributors-url]: https://github.com/milosdjurica/nestjs-movies/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/milosdjurica/nestjs-movies.svg?style=for-the-badge
+[forks-url]: https://github.com/milosdjurica/nestjs-movies/network/members
+[stars-shield]: https://img.shields.io/github/stars/milosdjurica/nestjs-movies.svg?style=for-the-badge
+[stars-url]: https://github.com/milosdjurica/nestjs-movies/stargazers
+[issues-shield]: https://img.shields.io/github/issues/milosdjurica/nestjs-movies.svg?style=for-the-badge
+[issues-url]: https://github.com/milosdjurica/nestjs-movies/issues
+[license-shield]: https://img.shields.io/github/license/milosdjurica/nestjs-movies.svg?style=for-the-badge
+[license-url]: https://github.com/milosdjurica/nestjs-movies/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/milosdjurica
+[product-screenshot]: images/screenshot.png
