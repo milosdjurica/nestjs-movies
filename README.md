@@ -58,7 +58,7 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
 I created this Movies&Series API to showcase my backend development skills. Project is created using NestJS and PostgreSQL database. It's designed to cover all essential things needed for production ready backend project.
 
@@ -77,6 +77,8 @@ Some things you can find in this project:
 - **Usage of environment variables** - for Database_Url and Access_Token_Secret and Refresh_Token_Secret
 - **Dependency injection** - NestJS is heavily oriented towards this pattern
 - **TODO: Tests** - I am planning to add unit tests and integration tests in the close future
+- **TODO: Api rate limit** - Add api rate limit
+- **TODO: Swagger Documentation** - Add swagger documentation
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -107,18 +109,30 @@ You will need Node.js and PostgreSQL database.
 
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo
    ```sh
    git clone https://github.com/milosdjurica/nestjs-movies.git
    ```
-3. Install NPM packages
+2. Install NPM packages
    ```sh
    npm install
+   #or
+   yarn
    ```
-4. Enter your API in `config.js`
+3. Enter your PostgreSQL database URL in .env
+
    ```js
-   const API_KEY = "ENTER YOUR API";
+   DATABASE_URL =
+     "postgresql://username:password@url:port/schema_name?schema=public";
+   #Example 'DATABASE_URL="postgresql://username:password@localhost:5432/movies_nestjs_db?schema=public"
+   '
+   ```
+
+4. Start application in development mode
+   ```sh
+   npm run start:dev
+   #or
+   yarn start:dev
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -129,7 +143,7 @@ You will need Node.js and PostgreSQL database.
 
 This project is meant to showcase my backend skills as a developer. I think it covers basic principles needed to know for backend development in production.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+<!-- _For more examples, please refer to the [Documentation](https://example.com)_ -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -165,7 +179,7 @@ Don't forget to give the project a star! Thanks again!
 
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+Miloš Đurica - [My LinkedIn](https://www.linkedin.com/in/milosdjurica/) - milosdjurica.work@gmail.com
 
 Project Link: [https://github.com/milosdjurica/nestjs-movies](https://github.com/milosdjurica/nestjs-movies)
 
