@@ -78,9 +78,9 @@ model Genre {
 model MovieRating {
   id          Int      @id @default(autoincrement())
   score       Int
-  movie       Movie    @relation(fields: [movieId], references: [id])
+  movie       Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
   movieId     Int
-  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdBy   User     @relation(fields: [createdById], references: [id], onDelete:Restrict )
   createdById Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -89,9 +89,9 @@ model MovieRating {
 model SeriesRating {
   id          Int      @id @default(autoincrement())
   score       Int
-  series      Series   @relation(fields: [seriesId], references: [id])
+  series      Series   @relation(fields: [seriesId], references: [id], onDelete: Cascade)
   seriesId    Int
-  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdBy   User     @relation(fields: [createdById], references: [id], onDelete: Restrict)
   createdById Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

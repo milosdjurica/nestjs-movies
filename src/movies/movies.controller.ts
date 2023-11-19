@@ -15,10 +15,7 @@ import { CreateMovieDto, UpdateMovieDto } from "./dto";
 import { GetCurrentUserId, Roles } from "@Src/common/decorators";
 import { RolesGuard } from "@Src/common/guards";
 import { Role } from "@prisma/client";
-import {
-  ParseOptionalBooleanPipe,
-  ParseOptionalFloatPipe,
-} from "@Src/common/pipes";
+import { ParseOptionalBooleanPipe } from "@Src/common/pipes";
 
 @Controller("movies")
 export class MoviesController {
@@ -40,8 +37,6 @@ export class MoviesController {
     @Query("page", new ParseIntPipe({ optional: true })) page: number = 1,
     @Query("perPage", new ParseIntPipe({ optional: true }))
     perPage: number = 10,
-    @Query("minRating", ParseOptionalFloatPipe) minRating: number,
-    @Query("maxRating", ParseOptionalFloatPipe) maxRating: number,
     @Query("includeActors", ParseOptionalBooleanPipe) includeActors: boolean,
     @Query("includeGenres", ParseOptionalBooleanPipe) includeGenres: boolean,
     // * If use actorNames and genreNames in combination -> it will only return movies with BOTH :
@@ -55,8 +50,6 @@ export class MoviesController {
     return this.moviesService.findAll(
       page,
       perPage,
-      minRating,
-      maxRating,
       includeActors,
       includeGenres,
       actorNames,
