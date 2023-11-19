@@ -1,9 +1,7 @@
 import {
   ConflictException,
-  HttpException,
   Injectable,
   NotFoundException,
-  HttpStatus,
 } from "@nestjs/common";
 import { DatabaseService } from "@Src/database/database.service";
 import { CreateGenreDto, UpdateGenreDto } from "./dto";
@@ -13,64 +11,34 @@ export class GenresService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async create(createGenreDto: CreateGenreDto) {
-    try {
-      return await this.databaseService.genre.create({ data: createGenreDto });
-    } catch (error) {
-      console.error(`Error creating genre:`, error);
-      throw new Error("An error occurred while creating the genre.");
-    }
+    return await this.databaseService.genre.create({ data: createGenreDto });
   }
 
   async findAll() {
-    try {
-      return await this.databaseService.genre.findMany({});
-    } catch (error) {
-      console.error(`Error fetching genres:`, error);
-      throw new Error("An error occurred while fetching genres.");
-    }
+    return await this.databaseService.genre.findMany({});
   }
 
   async findOne(id: number) {
-    try {
-      const genreExist = await this.databaseService.genre.findUnique({
-        where: { id },
-      });
-      if (!genreExist)
-        throw new NotFoundException(`Genre with ID ${id} does not exist!`);
-      return genreExist;
-    } catch (error) {
-      console.error(`Error fetching genre with ID ${id}:`, error);
-      if (error instanceof HttpException) throw error;
-      throw new HttpException(
-        `An error occurred while trying to find the genre with ID ${id}.`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    const genreExist = await this.databaseService.genre.findUnique({
+      where: { id },
+    });
+    if (!genreExist)
+      throw new NotFoundException(`Genre with ID ${id} does not exist!`);
+    return genreExist;
   }
 
   async update(id: number, updateGenreDto: UpdateGenreDto) {
-    try {
-      await this.findOne(id);
-      await this.genreNameExist(updateGenreDto.name);
+    await this.findOne(id);
+    await this.genreNameExist(updateGenreDto.name);
 
-      return await this.databaseService.genre.update({
-        where: { id },
-        data: updateGenreDto,
-      });
-    } catch (error) {
-      console.error(`Error updating genre with ID ${id}:`, error);
-      if (error instanceof HttpException) throw error;
-      throw new Error("An error occurred while updating the genre.");
-    }
+    return await this.databaseService.genre.update({
+      where: { id },
+      data: updateGenreDto,
+    });
   }
 
   async remove(id: number) {
-    try {
-      return await this.databaseService.genre.delete({ where: { id } });
-    } catch (error) {
-      console.error(`Error deleting genre with ID ${id}:`, error);
-      throw new Error("An error occurred while deleting the genre.");
-    }
+    return await this.databaseService.genre.delete({ where: { id } });
   }
 
   async genreNameExist(name: string) {

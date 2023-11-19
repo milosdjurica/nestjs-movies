@@ -3,8 +3,6 @@ import {
   Injectable,
   ConflictException,
   NotFoundException,
-  HttpException,
-  HttpStatus,
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 
@@ -34,25 +32,16 @@ export class UsersService {
   }
 
   async findOne(id: number, movies?: boolean, series?: boolean) {
-    try {
-      // TODO also pass include: {movies, series}
-      const userExist = await this.databaseService.user.findUnique({
-        where: { id },
-        include: { movies, series },
-      });
-      if (!userExist)
-        throw new NotFoundException(`User with ID ${id} does not exist!`);
+    // TODO also pass include: {movies, series}
+    const userExist = await this.databaseService.user.findUnique({
+      where: { id },
+      include: { movies, series },
+    });
+    if (!userExist)
+      throw new NotFoundException(`User with ID ${id} does not exist!`);
 
-      // ! Excluding password and hashedRt
-      return this.exclude(userExist, ["password", "hashedRt"]);
-    } catch (error) {
-      console.error(`Error fetching user with ID ${id}:`, error);
-      if (error instanceof HttpException) throw error;
-      throw new HttpException(
-        `An error occurred while trying to find the user with ID ${id}.`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    // ! Excluding password and hashedRt
+    return this.exclude(userExist, ["password", "hashedRt"]);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

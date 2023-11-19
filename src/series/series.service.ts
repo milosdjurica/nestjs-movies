@@ -8,55 +8,31 @@ export class SeriesService {
 
   async create(createSeriesDto: CreateSeriesDto, userId: number) {
     // TODO check if already exist AND add option to include actors and genres when creating
-    try {
-      return await this.databaseService.series.create({
-        data: {
-          createdById: userId,
-          ...createSeriesDto,
-        },
-      });
-    } catch (error) {
-      console.error("Error creating series:", error);
-      throw new Error("Failed to create series.");
-    }
+
+    return await this.databaseService.series.create({
+      data: {
+        createdById: userId,
+        ...createSeriesDto,
+      },
+    });
   }
 
   async findAll() {
-    try {
-      return await this.databaseService.series.findMany({});
-    } catch (error) {
-      console.error("Error fetching series:", error);
-      throw new Error("Failed to fetch series.");
-    }
+    return await this.databaseService.series.findMany({});
   }
 
   async findOne(id: number) {
-    try {
-      return await this.databaseService.series.findUnique({ where: { id } });
-    } catch (error) {
-      console.error(`Error finding series with id ${id}:`, error);
-      throw new Error("Failed to find series.");
-    }
+    return await this.databaseService.series.findUnique({ where: { id } });
   }
 
   async update(id: number, updateSeriesDto: UpdateSeriesDto) {
-    try {
-      return await this.databaseService.series.update({
-        where: { id },
-        data: updateSeriesDto,
-      });
-    } catch (error) {
-      console.error(`Error updating series with id ${id}:`, error);
-      throw new Error("Failed to update series.");
-    }
+    return await this.databaseService.series.update({
+      where: { id },
+      data: updateSeriesDto,
+    });
   }
 
   async remove(id: number) {
-    try {
-      return await this.databaseService.series.delete({ where: { id } });
-    } catch (error) {
-      console.error(`Error removing series with id ${id}:`, error);
-      throw new Error("Failed to remove series.");
-    }
+    return await this.databaseService.series.delete({ where: { id } });
   }
 }
