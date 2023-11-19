@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  ForbiddenException,
 } from "@nestjs/common";
 import { CreateSeriesRatingDto } from "./dto/create-series-rating.dto";
 import { UpdateSeriesRatingDto } from "./dto/update-series-rating.dto";
@@ -19,7 +20,7 @@ export class SeriesRatingsService {
     });
     if (!seriesExist)
       throw new NotFoundException(
-        `series with id ${createSeriesRatingDto.seriesId} does not exist! Please provide another movie ID`,
+        `Series with id ${createSeriesRatingDto.seriesId} does not exist! Please provide another series ID`,
       );
 
     return await this.databaseService.seriesRating.create({
@@ -40,11 +41,16 @@ export class SeriesRatingsService {
   }
 
   async findAll() {
-    return `This action returns all seriesRatings`;
+    return await this.databaseService.seriesRating.findMany({});
   }
 
   async findOne(id: number) {
-    return `This action returns a #${id} seriesRating`;
+    const rating = await this.databaseService.seriesRating.findUnique({
+      where: { id },
+    });
+    if (!rating)
+      throw new NotFoundException(`Could not find rating with id ${id}!`);
+    return rating;
   }
 
   async update(
@@ -52,24 +58,40 @@ export class SeriesRatingsService {
     updateSeriesRatingDto: UpdateSeriesRatingDto,
     userId: number,
   ) {
-    return `This action updates a #${id} seriesRating`;
+    const foundRating = await this.findOne(id);
+
+    if (foundRating.createdById !== userId)
+      throw new ForbiddenException(
+        "You do not have access to modify this rating",
+      );
+    return await this.databaseService.seriesRating.update({
+      where: { id },
+      data: updateSeriesRatingDto,
+    });
   }
 
   async remove(id: number, userId: number) {
-    return `This action removes a #${id} seriesRating`;
+    const foundRating = await this.findOne(id);
+    if (foundRating.createdById !== userId)
+      throw new ForbiddenException(
+        "You do not have access to modify this rating",
+      );
+    return await this.databaseService.seriesRating.delete({ where: { id } });
   }
 
-  async ratingExist(userId: number, movieId: number) {
-    const foundMovieRating = await this.databaseService.movieRating.findFirst({
-      where: {
-        createdById: userId,
-        movieId,
+  async ratingExist(userId: number, seriesId: number) {
+    const foundSeriesRating = await this.databaseService.seriesRating.findFirst(
+      {
+        where: {
+          createdById: userId,
+          seriesId,
+        },
       },
-    });
-    console.group(foundMovieRating);
-    if (foundMovieRating)
+    );
+    console.group(foundSeriesRating);
+    if (foundSeriesRating)
       throw new ConflictException(
-        `User with id ${userId} already gave rating to the movie with ID ${movieId}!`,
+        `User with id ${userId} already gave rating to the series with ID ${seriesId}!`,
       );
   }
 }
