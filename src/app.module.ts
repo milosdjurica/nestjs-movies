@@ -16,6 +16,7 @@ import { AtGuard } from "./common/guards";
 import { MovieRatingsModule } from "./movie-ratings/movie-ratings.module";
 import { SeriesActorModule } from './series-actor/series-actor.module';
 import { SeriesGenreModule } from './series-genre/series-genre.module';
+import { SeriesRatingsModule } from './series-ratings/series-ratings.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { SeriesGenreModule } from './series-genre/series-genre.module';
     MovieRatingsModule,
     SeriesActorModule,
     SeriesGenreModule,
+    SeriesRatingsModule,
   ],
   controllers: [AppController],
   providers: [
