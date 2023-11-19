@@ -139,7 +139,7 @@ You will need Node.js and PostgreSQL database.
 
 ## Usage
 
-This project is meant to showcase my skills as a backend developer. I think it covers basic principles needed to know for backend development in production.
+This project is meant to showcase my skills as a backend developer. It covers basic principles every backend developer should know to produce production ready applications.
 
 <!-- _For more examples, please refer to the [Documentation](https://example.com)_ -->
 
