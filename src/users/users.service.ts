@@ -32,7 +32,6 @@ export class UsersService {
   }
 
   async findOne(id: number, movies?: boolean, series?: boolean) {
-    // TODO also pass include: {movies, series}
     const userExist = await this.databaseService.user.findUnique({
       where: { id },
       include: { movies, series },

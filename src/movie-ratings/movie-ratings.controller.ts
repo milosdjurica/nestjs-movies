@@ -25,6 +25,8 @@ export class MovieRatingsController {
     return this.movieRatingsService.create(userId, createMovieRatingDto);
   }
 
+  // TODO add method to return AVG RATING for movie
+
   @Get()
   // TODO query find all for specific user or specific movie or find all greater than or less than or equal
   // TODO include movies and users objects ???

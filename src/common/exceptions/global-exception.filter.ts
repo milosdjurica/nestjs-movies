@@ -24,7 +24,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       response.status(500).json({
         statusCode: 500,
         exception: "Internal Server Error",
-        message: "Sorry, something went wrong!",
+        message:
+          "Sorry, something went wrong! An unexpected error occurred... Try again later!",
       });
     }
   }

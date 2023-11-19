@@ -33,7 +33,7 @@ export class MoviesController {
 
   @Get()
   findAll(
-    // TODO add query string for GTE LTE EQUALS rating
+    // TODO add query string for GTE LTE EQUALS avg rating (but need multiple queries and to calculate AVG)
     @Query("page", new ParseIntPipe({ optional: true })) page: number = 1,
     @Query("perPage", new ParseIntPipe({ optional: true }))
     perPage: number = 10,

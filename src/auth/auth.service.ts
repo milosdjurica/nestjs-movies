@@ -105,7 +105,7 @@ export class AuthService {
   async getTokens(
     userId: number,
     username: string,
-    // TODO fix type
+    // TODO check type
     role: "USER" | "ADMIN",
   ): Promise<Tokens> {
     const [at, rt] = await Promise.all([
