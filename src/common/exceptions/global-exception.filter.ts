@@ -23,7 +23,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       this.logger.error(exception.message, exception.stack);
       response.status(500).json({
         statusCode: 500,
-        message: "Internal Server Error",
+        exception: "Internal Server Error",
+        message: "Sorry, something went wrong!",
       });
     }
   }
