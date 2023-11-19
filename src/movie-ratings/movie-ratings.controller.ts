@@ -39,7 +39,6 @@ export class MovieRatingsController {
     return this.movieRatingsService.findOne(id);
   }
 
-  // TODO user can update only his ratings
   @Patch(":id")
   update(
     @Param("id", ParseIntPipe) movieRatingId: number,
@@ -53,7 +52,6 @@ export class MovieRatingsController {
     );
   }
 
-  // TODO user can delete only his ratings
   @Delete(":id")
   remove(
     @Param("id", ParseIntPipe) id: number,

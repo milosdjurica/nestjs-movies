@@ -1,4 +1,8 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateSeriesRatingDto } from './create-series-rating.dto';
+import { IsNotEmpty, IsNumber, Max } from "class-validator";
 
-export class UpdateSeriesRatingDto extends PartialType(CreateSeriesRatingDto) {}
+export class UpdateSeriesRatingDto {
+  @IsNotEmpty()
+  @IsNumber()
+  @Max(10)
+  readonly score: number;
+}
