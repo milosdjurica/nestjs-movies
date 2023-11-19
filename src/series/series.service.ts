@@ -95,7 +95,12 @@ export class SeriesService {
     });
   }
 
-  async findOne(id: number, includeActors?: boolean, includeGenres?: boolean) {
+  async findOne(
+    id: number,
+    includeActors?: boolean,
+    includeGenres?: boolean,
+    includeRatings?: boolean,
+  ) {
     const seriesActors = includeActors
       ? { select: { actor: includeActors } }
       : false;
@@ -105,7 +110,7 @@ export class SeriesService {
 
     const series = await this.databaseService.series.findUnique({
       where: { id },
-      include: { seriesActors, seriesGenres },
+      include: { seriesActors, seriesGenres, ratings: includeRatings },
     });
 
     if (!series)
