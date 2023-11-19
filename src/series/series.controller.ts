@@ -15,7 +15,10 @@ import { CreateSeriesDto, UpdateSeriesDto } from "./dto";
 import { GetCurrentUserId, Roles } from "@Src/common/decorators";
 import { Role } from "@prisma/client";
 import { RolesGuard } from "@Src/common/guards";
-import { ParseOptionalBooleanPipe } from "@Src/common/pipes";
+import {
+  ParseOptionalBooleanPipe,
+  ParseOptionalIntPipe,
+} from "@Src/common/pipes";
 
 @Controller("series")
 export class SeriesController {
@@ -42,6 +45,8 @@ export class SeriesController {
     @Query("includeGenres", ParseOptionalBooleanPipe) includeGenres: boolean,
     @Query("actorNames") actorNames: string,
     @Query("genreNames") genreNames: string,
+    @Query("minNumOfEpisodes", ParseOptionalIntPipe) minNumOfEpisodes: number,
+    @Query("maxNumOfEpisodes", ParseOptionalIntPipe) maxNumOfEpisodes: number,
   ) {
     return this.seriesService.findAll(
       page,
@@ -50,6 +55,8 @@ export class SeriesController {
       includeGenres,
       actorNames,
       genreNames,
+      minNumOfEpisodes,
+      maxNumOfEpisodes,
     );
   }
 

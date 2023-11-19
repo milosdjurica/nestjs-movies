@@ -50,6 +50,8 @@ export class SeriesService {
     includeGenres?: boolean,
     actorNames?: string,
     genreNames?: string,
+    minNumOfEpisodes?: number,
+    maxNumOfEpisodes?: number,
   ) {
     const actorsArr = actorNames?.split(",");
     const genresArr = genreNames?.split(",");
@@ -66,8 +68,26 @@ export class SeriesService {
       ? { some: { genre: { name: { in: genresArr } } } }
       : {};
 
+    const episodesQuery: { numOfEpisodes?: { gte?: number; lte?: number } } =
+      {};
+
+    if (minNumOfEpisodes !== undefined) {
+      episodesQuery.numOfEpisodes = { gte: minNumOfEpisodes };
+    }
+
+    if (maxNumOfEpisodes !== undefined) {
+      episodesQuery.numOfEpisodes = {
+        ...(episodesQuery.numOfEpisodes || {}),
+        lte: maxNumOfEpisodes,
+      };
+    }
+
     return await this.databaseService.series.findMany({
-      where: { seriesActors: actorQuery, seriesGenres: genreQuery },
+      where: {
+        seriesActors: actorQuery,
+        seriesGenres: genreQuery,
+        ...episodesQuery,
+      },
       skip: (page - 1) * perPage,
       take: perPage,
       include: { seriesActors, seriesGenres },
