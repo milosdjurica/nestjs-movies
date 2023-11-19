@@ -8,12 +8,14 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  Query,
 } from "@nestjs/common";
 import { SeriesService } from "./series.service";
 import { CreateSeriesDto, UpdateSeriesDto } from "./dto";
 import { GetCurrentUserId, Roles } from "@Src/common/decorators";
 import { Role } from "@prisma/client";
 import { RolesGuard } from "@Src/common/guards";
+import { ParseOptionalBooleanPipe } from "@Src/common/pipes";
 
 @Controller("series")
 export class SeriesController {
@@ -32,8 +34,23 @@ export class SeriesController {
   // TODO filter by rating, number of seasons, number of episodes, actors, genres,
   // TODO include actors, genres and ratings in, and add page and perPage
   @Get()
-  findAll() {
-    return this.seriesService.findAll();
+  findAll(
+    @Query("page", new ParseIntPipe({ optional: true })) page: number = 1,
+    @Query("perPage", new ParseIntPipe({ optional: true }))
+    perPage: number = 10,
+    @Query("includeActors", ParseOptionalBooleanPipe) includeActors: boolean,
+    @Query("includeGenres", ParseOptionalBooleanPipe) includeGenres: boolean,
+    @Query("actorNames") actorNames: string,
+    @Query("genreNames") genreNames: string,
+  ) {
+    return this.seriesService.findAll(
+      page,
+      perPage,
+      includeActors,
+      includeGenres,
+      actorNames,
+      genreNames,
+    );
   }
 
   @Get(":id")

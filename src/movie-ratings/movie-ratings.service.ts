@@ -13,7 +13,7 @@ export class MovieRatingsService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async create(userId: number, createMovieRatingDto: CreateMovieRatingDto) {
-    // ! prevent adding multiple ratings from same user for same movie
+    // ! this is preventing same user to add multiple ratings for one movie
     await this.ratingExist(userId, createMovieRatingDto.movieId);
 
     const movieExist = await this.databaseService.movie.findUnique({
@@ -42,10 +42,7 @@ export class MovieRatingsService {
   }
 
   async findAll() {
-    const ratings = await this.databaseService.movieRating.findMany({});
-    if (!ratings)
-      throw new NotFoundException("Could not find any movie ratings!");
-    return ratings;
+    return await this.databaseService.movieRating.findMany({});
   }
 
   async findOne(id: number) {

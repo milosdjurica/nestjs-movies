@@ -43,8 +43,35 @@ export class SeriesService {
     });
   }
 
-  async findAll() {
-    return await this.databaseService.series.findMany({});
+  async findAll(
+    page: number,
+    perPage: number,
+    includeActors?: boolean,
+    includeGenres?: boolean,
+    actorNames?: string,
+    genreNames?: string,
+  ) {
+    const actorsArr = actorNames?.split(",");
+    const genresArr = genreNames?.split(",");
+
+    const seriesActors = includeActors ? { select: { actor: true } } : false;
+
+    const seriesGenres = includeGenres ? { select: { genre: true } } : false;
+
+    const actorQuery = actorsArr
+      ? { some: { actor: { name: { in: actorsArr } } } }
+      : {};
+
+    const genreQuery = genresArr
+      ? { some: { genre: { name: { in: genresArr } } } }
+      : {};
+
+    return await this.databaseService.series.findMany({
+      where: { seriesActors: actorQuery, seriesGenres: genreQuery },
+      skip: (page - 1) * perPage,
+      take: perPage,
+      include: { seriesActors, seriesGenres },
+    });
   }
 
   async findOne(id: number, actors?: boolean, genres?: boolean) {

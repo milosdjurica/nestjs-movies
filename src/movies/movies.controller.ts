@@ -43,6 +43,7 @@ export class MoviesController {
     // * If use actorNames and genreNames in combination -> it will only return movies with BOTH :
     // * all movies that have at least one Actor from provided actors,
     // * and at the same time at least one genre from provided genres
+    // ! && && &&
     // ! Example: /movies?actorNames=Leonardo%20DiCaprio&genreNames=Horror
     // ! it will look for horror in which Leonardo DiCaprio is actor !!!
     @Query("actorNames") actorNames: string,

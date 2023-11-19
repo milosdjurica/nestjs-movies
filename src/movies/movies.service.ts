@@ -67,17 +67,20 @@ export class MoviesService {
       ? { select: { genre: includeGenres } }
       : false;
 
-    const actorQuery = { some: { actor: { name: { in: actorsArr } } } };
-    const genreQuery = { some: { genre: { name: { in: genresArr } } } };
+    const actorQuery = actorsArr
+      ? { some: { actor: { name: { in: actorsArr } } } }
+      : {};
+    const genreQuery = genresArr
+      ? { some: { genre: { name: { in: genresArr } } } }
+      : {};
 
-    const movies = await this.databaseService.movie.findMany({
+    return await this.databaseService.movie.findMany({
       where: { movieActors: actorQuery, movieGenres: genreQuery },
       skip: (page - 1) * perPage,
       take: perPage,
       include: { movieActors, movieGenres },
     });
-
-    return { length: movies.length, movies };
+    // return { length: movies.length, movies };
   }
 
   // ! Find By ID
