@@ -48,7 +48,7 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
+    <!-- <li><a href="#roadmap">Roadmap</a></li> -->
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -141,7 +141,7 @@ You will need Node.js and PostgreSQL database.
 
 ## Usage
 
-This project is meant to showcase my backend skills as a developer. I think it covers basic principles needed to know for backend development in production.
+This project is meant to showcase my skills as a backend developer. I think it covers basic principles needed to know for backend development in production.
 
 <!-- _For more examples, please refer to the [Documentation](https://example.com)_ -->
 
