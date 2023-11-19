@@ -1,6 +1,7 @@
 import {
   ConflictException,
   ForbiddenException,
+  NotFoundException,
   Injectable,
 } from "@nestjs/common";
 import { CreateMovieRatingDto } from "./dto/create-movie-rating.dto";
@@ -14,7 +15,15 @@ export class MovieRatingsService {
   async create(userId: number, createMovieRatingDto: CreateMovieRatingDto) {
     // ! prevent adding multiple ratings from same user for same movie
     await this.ratingExist(userId, createMovieRatingDto.movieId);
-    // TODO handle if movie or user not found
+
+    const movieExist = await this.databaseService.movie.findUnique({
+      where: { id: createMovieRatingDto.movieId },
+    });
+    if (!movieExist)
+      throw new NotFoundException(
+        `Movie with id ${createMovieRatingDto.movieId} does not exist! Please provide another movie ID`,
+      );
+
     return await this.databaseService.movieRating.create({
       data: {
         score: createMovieRatingDto.score,
@@ -33,26 +42,28 @@ export class MovieRatingsService {
   }
 
   async findAll() {
-    return await this.databaseService.movieRating.findMany({});
+    const ratings = await this.databaseService.movieRating.findMany({});
+    if (!ratings)
+      throw new NotFoundException("Could not find any movie ratings!");
+    return ratings;
   }
 
   async findOne(id: number) {
-    return await this.databaseService.movieRating.findUnique({
+    const rating = await this.databaseService.movieRating.findUnique({
       where: { id },
     });
+    if (!rating)
+      throw new NotFoundException(`Could not find rating with id ${id}!`);
+    return rating;
   }
-
-  // TODO Handle in update and delete if rating is not found to throw error for that
 
   async update(
     id: number,
     updateMovieRatingDto: UpdateMovieRatingDto,
     userId: number,
   ) {
-    const foundRating = await this.databaseService.movieRating.findUnique({
-      where: { id },
-    });
-    console.log(userId);
+    const foundRating = await this.findOne(id);
+
     if (foundRating.createdById !== userId)
       throw new ForbiddenException(
         "You do not have access to modify this rating",
@@ -64,10 +75,7 @@ export class MovieRatingsService {
   }
 
   async remove(id: number, userId: number) {
-    const foundRating = await this.databaseService.movieRating.findUnique({
-      where: { id },
-    });
-    console.log(userId);
+    const foundRating = await this.findOne(id);
     if (foundRating.createdById !== userId)
       throw new ForbiddenException(
         "You do not have access to modify this rating",
@@ -75,16 +83,37 @@ export class MovieRatingsService {
     return await this.databaseService.movieRating.delete({ where: { id } });
   }
 
+  // ! Here is problem bcz if i delete rating from database, it still process it like it is there
+  // ! So it wont be found in this method and wont drop error, but still wont be able to add rating again
+  // TODO FIX THIS !!!!!!
   async ratingExist(userId: number, movieId: number) {
     const foundMovieRating = await this.databaseService.movieRating.findFirst({
       where: {
         createdById: userId,
-        movieId: movieId,
+        movieId,
       },
     });
+    console.group(foundMovieRating);
     if (foundMovieRating)
       throw new ConflictException(
         `User with id ${userId} already gave rating to the movie with ID ${movieId}!`,
       );
   }
+
+  // async findAvgRatingForMovie(movieId: number) {
+  //   const ratings = await this.databaseService.movieRating.findMany({
+  //     where: { movieId },
+  //   });
+
+  //   // ! Movie does not have any ratings
+  //   if (ratings.length === 0) {
+  //     return null;
+  //   }
+
+  //   const totalScore = ratings.reduce(
+  //     (sum, rating) => (sum += rating.score),
+  //     0,
+  //   );
+  //   return totalScore / ratings.length;
+  // }
 }
