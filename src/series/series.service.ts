@@ -5,20 +5,40 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { CreateSeriesDto, UpdateSeriesDto } from "./dto";
+import { SeriesActorService } from "@Src/series-actor/series-actor.service";
+import { SeriesGenreService } from "@Src/series-genre/series-genre.service";
 
 @Injectable()
 export class SeriesService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly seriesActorService: SeriesActorService,
+    private readonly seriesGenreService: SeriesGenreService,
+  ) {}
 
   async create(createSeriesDto: CreateSeriesDto, userId: number) {
     await this.seriesExist(createSeriesDto.title);
 
     // TODO add to include actors and genres when creating (first create those modules)
 
+    const seriesActorsCreateData =
+      await this.seriesActorService.createOrConnectActorsWithSeries(
+        createSeriesDto.actors || [],
+      );
+    const seriesGenresCreateData =
+      await this.seriesGenreService.createOrConnectGenresWithSeries(
+        createSeriesDto.genres || [],
+      );
+
+    delete createSeriesDto.actors;
+    delete createSeriesDto.genres;
+
     return await this.databaseService.series.create({
       data: {
         createdById: userId,
         ...createSeriesDto,
+        seriesActors: { create: seriesActorsCreateData },
+        seriesGenres: { create: seriesGenresCreateData },
       },
     });
   }
