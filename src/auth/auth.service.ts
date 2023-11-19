@@ -14,8 +14,7 @@ export class AuthService {
     private readonly userService: UsersService,
   ) {}
 
-  // ! This will only be used by normal users
-  // TODO In user service i will create a method for admin to add other users or other admins
+  // ! This will only be used by normal users, role will always be USER
   async registerLocal(registerDto: RegisterDto): Promise<Tokens> {
     await this.userService.usernameExist(registerDto.username);
 

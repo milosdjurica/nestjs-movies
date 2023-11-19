@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
+import { Payload } from "../types";
 
 @Injectable()
 export class AtStrategy extends PassportStrategy(Strategy, "jwt") {
@@ -10,8 +11,8 @@ export class AtStrategy extends PassportStrategy(Strategy, "jwt") {
       secretOrKey: process.env.AT_SECRET,
     });
   }
-  // TODO properly put type to this instead of any
-  validate(payload: any) {
+  // TODO check if type is always correct ???
+  validate(payload: Payload) {
     // req.user = payload;
     return payload;
   }
