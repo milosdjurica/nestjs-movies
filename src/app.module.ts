@@ -14,6 +14,8 @@ import { APP_FILTER, APP_GUARD } from "@nestjs/core";
 import { AuthModule } from "./auth/auth.module";
 import { AtGuard } from "./common/guards";
 import { MovieRatingsModule } from "./movie-ratings/movie-ratings.module";
+import { SeriesActorModule } from './series-actor/series-actor.module';
+import { SeriesGenreModule } from './series-genre/series-genre.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { MovieRatingsModule } from "./movie-ratings/movie-ratings.module";
     MovieGenreModule,
     AuthModule,
     MovieRatingsModule,
+    SeriesActorModule,
+    SeriesGenreModule,
   ],
   controllers: [AppController],
   providers: [
