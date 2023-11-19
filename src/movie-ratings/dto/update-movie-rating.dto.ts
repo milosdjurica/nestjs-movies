@@ -1,4 +1,3 @@
-// create-rating.dto.ts
 import { IsNotEmpty, IsNumber, Max } from "class-validator";
 
 export class UpdateMovieRatingDto {

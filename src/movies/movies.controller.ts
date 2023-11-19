@@ -40,6 +40,7 @@ export class MoviesController {
     perPage: number = 10,
     @Query("includeActors", ParseOptionalBooleanPipe) includeActors: boolean,
     @Query("includeGenres", ParseOptionalBooleanPipe) includeGenres: boolean,
+    @Query("includeRatings", ParseOptionalBooleanPipe) includeRatings: boolean,
     // * If use actorNames and genreNames in combination -> it will only return movies with BOTH :
     // * all movies that have at least one Actor from provided actors,
     // * and at the same time at least one genre from provided genres
@@ -54,6 +55,7 @@ export class MoviesController {
       perPage,
       includeActors,
       includeGenres,
+      includeRatings,
       actorNames,
       genreNames,
     );

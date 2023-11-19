@@ -48,6 +48,7 @@ export class SeriesService {
     perPage: number,
     includeActors?: boolean,
     includeGenres?: boolean,
+    includeRatings?: boolean,
     actorNames?: string,
     genreNames?: string,
     minNumOfEpisodes?: number,
@@ -90,7 +91,7 @@ export class SeriesService {
       },
       skip: (page - 1) * perPage,
       take: perPage,
-      include: { seriesActors, seriesGenres },
+      include: { seriesActors, seriesGenres, ratings: includeRatings },
     });
   }
 

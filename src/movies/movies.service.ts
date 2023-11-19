@@ -52,6 +52,7 @@ export class MoviesService {
     perPage: number,
     includeActors?: boolean,
     includeGenres?: boolean,
+    includeRatings?: boolean,
     actorNames?: string,
     genreNames?: string,
   ) {
@@ -78,7 +79,7 @@ export class MoviesService {
       where: { movieActors: actorQuery, movieGenres: genreQuery },
       skip: (page - 1) * perPage,
       take: perPage,
-      include: { movieActors, movieGenres },
+      include: { movieActors, movieGenres, ratings: includeRatings },
     });
     // return { length: movies.length, movies };
   }
