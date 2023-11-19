@@ -74,9 +74,13 @@ export class SeriesService {
     });
   }
 
-  async findOne(id: number, actors?: boolean, genres?: boolean) {
-    const seriesActors = actors ? { select: { actor: actors } } : false;
-    const seriesGenres = genres ? { select: { genre: genres } } : false;
+  async findOne(id: number, includeActors?: boolean, includeGenres?: boolean) {
+    const seriesActors = includeActors
+      ? { select: { actor: includeActors } }
+      : false;
+    const seriesGenres = includeGenres
+      ? { select: { genre: includeGenres } }
+      : false;
 
     const series = await this.databaseService.series.findUnique({
       where: { id },

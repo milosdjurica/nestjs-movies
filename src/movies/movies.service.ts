@@ -84,9 +84,13 @@ export class MoviesService {
   }
 
   // ! Find By ID
-  async findOne(id: number, actors?: boolean, genres?: boolean) {
-    const movieActors = actors ? { select: { actor: actors } } : false;
-    const movieGenres = genres ? { select: { genre: genres } } : false;
+  async findOne(id: number, includeActors?: boolean, includeGenres?: boolean) {
+    const movieActors = includeActors
+      ? { select: { actor: includeActors } }
+      : false;
+    const movieGenres = includeGenres
+      ? { select: { genre: includeGenres } }
+      : false;
 
     const movie = await this.databaseService.movie.findUnique({
       where: { id },

@@ -54,8 +54,12 @@ export class SeriesController {
   }
 
   @Get(":id")
-  findOne(@Param("id", ParseIntPipe) id: number) {
-    return this.seriesService.findOne(id);
+  findOne(
+    @Param("id", ParseIntPipe) id: number,
+    @Query("includeActors", ParseOptionalBooleanPipe) includeActors: boolean,
+    @Query("includeGenres", ParseOptionalBooleanPipe) includeGenres: boolean,
+  ) {
+    return this.seriesService.findOne(id, includeActors, includeGenres);
   }
 
   @Roles(Role.ADMIN)

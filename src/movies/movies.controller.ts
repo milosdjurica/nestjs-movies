@@ -62,10 +62,10 @@ export class MoviesController {
   @Get(":id")
   findOne(
     @Param("id", ParseIntPipe) id: number,
-    @Query("actors", ParseOptionalBooleanPipe) actors: boolean,
-    @Query("genres", ParseOptionalBooleanPipe) genres: boolean,
+    @Query("includeActors", ParseOptionalBooleanPipe) includeActors: boolean,
+    @Query("includeGenres", ParseOptionalBooleanPipe) includeGenres: boolean,
   ) {
-    return this.moviesService.findOne(id, actors, genres);
+    return this.moviesService.findOne(id, includeActors, includeGenres);
   }
 
   @Roles(Role.ADMIN)
