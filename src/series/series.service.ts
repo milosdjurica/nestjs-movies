@@ -19,8 +19,6 @@ export class SeriesService {
   async create(createSeriesDto: CreateSeriesDto, userId: number) {
     await this.seriesExist(createSeriesDto.title);
 
-    // TODO add to include actors and genres when creating (first create those modules)
-
     const seriesActorsCreateData =
       await this.seriesActorService.createOrConnectActorsWithSeries(
         createSeriesDto.actors || [],

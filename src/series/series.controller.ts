@@ -34,8 +34,6 @@ export class SeriesController {
     return this.seriesService.create(createSeriesDto, userId);
   }
 
-  // TODO filter by rating, number of seasons, number of episodes, actors, genres,
-  // TODO include actors, genres and ratings in, and add page and perPage
   @Get()
   findAll(
     @Query("page", new ParseIntPipe({ optional: true })) page: number = 1,

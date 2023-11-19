@@ -80,9 +80,6 @@ export class MovieRatingsService {
     return await this.databaseService.movieRating.delete({ where: { id } });
   }
 
-  // ! Here is problem bcz if i delete rating from database, it still process it like it is there
-  // ! So it wont be found in this method and wont drop error, but still wont be able to add rating again
-  // TODO FIX THIS !!!!!!
   async ratingExist(userId: number, movieId: number) {
     const foundMovieRating = await this.databaseService.movieRating.findFirst({
       where: {
