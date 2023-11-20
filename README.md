@@ -17,7 +17,7 @@
 <h3 align="center">NestJS Movies Backend</h3>
 
   <p align="center">
-    Movies&Series API created with NestJS and is using PostgreSQL database.
+    Movies&Series REST API created with NestJS and is using PostgreSQL database.
     <br />
     <a href="https://github.com/milosdjurica/nestjs-movies"><strong>Explore the docs »</strong></a>
     <br />
@@ -60,7 +60,7 @@
 
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
-I created this Movies&Series API to showcase my backend development skills. Project is created with NestJS and is using PostgreSQL database. It's designed to cover all essential things needed for production ready backend project. You can find database schema in /prisma/schema.prisma .
+I created this Movies&Series REST API to showcase my backend development skills. Project is created with NestJS and is using PostgreSQL database. It's designed to cover all essential things needed for production ready backend project. You can find database schema in /prisma/schema.prisma .
 
 Some things you can find in this project:
 
